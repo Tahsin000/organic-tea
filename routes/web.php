@@ -405,7 +405,11 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
         Route::get('/403',         [ErrorController::class, 'e403'])->name('403');
         Route::get('/404',         [ErrorController::class, 'e404'])->name('404');
         Route::get('/408',         [ErrorController::class, 'e408'])->name('408');
+        Route::get('/429',         [ErrorController::class, 'e429'])->name('429');
         Route::get('/500',         [ErrorController::class, 'e500'])->name('500');
+        Route::get('/502',         [ErrorController::class, 'e502'])->name('502');
+        Route::get('/503',         [ErrorController::class, 'e503'])->name('503');
+        Route::get('/504',         [ErrorController::class, 'e504'])->name('504');
         Route::get('/maintenance', [ErrorController::class, 'maintenance'])->name('maintenance');
     });
 
