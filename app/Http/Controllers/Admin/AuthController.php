@@ -3,39 +3,70 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    // Basic style
-    public function signIn()        { return view('admin.auth.sign-in'); }
-    public function signUp()        { return view('admin.auth.sign-up'); }
-    public function lockScreen()    { return view('admin.auth.lock-screen'); }
-    public function resetPass()     { return view('admin.auth.reset-pass'); }
-    public function newPass()       { return view('admin.auth.new-pass'); }
-    public function loginPin()      { return view('admin.auth.login-pin'); }
-    public function twoFactor()     { return view('admin.auth.two-factor'); }
-    public function successMail()   { return view('admin.auth.success-mail'); }
-    public function deleteAccount() { return view('admin.auth.delete-account'); }
+    public function signIn() { return view('admin.auth.login'); }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            if ($user->is_admin) {
+                $request->session()->regenerate();
+                return redirect()->intended(route('admin.dashboard.ecommerce'));
+            }
+            Auth::logout();
+            return back()->withErrors(['email' => 'Access denied. Admin only.']);
+        }
+
+        return back()->withErrors(['email' => 'Invalid credentials.']);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('admin.auth.sign-in');
+    }
+
+    // Placeholder views - non-login auth disabled
+    public function signUp()    { abort(404); }
+    public function lockScreen()    { abort(404); }
+    public function resetPass()     { abort(404); }
+    public function newPass()       { abort(404); }
+    public function loginPin()      { abort(404); }
+    public function twoFactor()     { abort(404); }
+    public function successMail()   { abort(404); }
+    public function deleteAccount() { abort(404); }
 
     // Card style
-    public function cardSignIn()        { return view('admin.auth.card-sign-in'); }
-    public function cardSignUp()        { return view('admin.auth.card-sign-up'); }
-    public function cardLockScreen()    { return view('admin.auth.card-lock-screen'); }
-    public function cardResetPass()     { return view('admin.auth.card-reset-pass'); }
-    public function cardNewPass()       { return view('admin.auth.card-new-pass'); }
-    public function cardLoginPin()      { return view('admin.auth.card-login-pin'); }
-    public function cardTwoFactor()     { return view('admin.auth.card-two-factor'); }
-    public function cardSuccessMail()   { return view('admin.auth.card-success-mail'); }
-    public function cardDeleteAccount() { return view('admin.auth.card-delete-account'); }
+    public function cardSignIn()        { abort(404); }
+    public function cardSignUp()        { abort(404); }
+    public function cardLockScreen()    { abort(404); }
+    public function cardResetPass()     { abort(404); }
+    public function cardNewPass()       { abort(404); }
+    public function cardLoginPin()      { abort(404); }
+    public function cardTwoFactor()     { abort(404); }
+    public function cardSuccessMail()   { abort(404); }
+    public function cardDeleteAccount() { abort(404); }
 
     // Split style
-    public function splitSignIn()        { return view('admin.auth.split-sign-in'); }
-    public function splitSignUp()        { return view('admin.auth.split-sign-up'); }
-    public function splitLockScreen()    { return view('admin.auth.split-lock-screen'); }
-    public function splitResetPass()     { return view('admin.auth.split-reset-pass'); }
-    public function splitNewPass()       { return view('admin.auth.split-new-pass'); }
-    public function splitLoginPin()      { return view('admin.auth.split-login-pin'); }
-    public function splitTwoFactor()     { return view('admin.auth.split-two-factor'); }
-    public function splitSuccessMail()   { return view('admin.auth.split-success-mail'); }
-    public function splitDeleteAccount() { return view('admin.auth.split-delete-account'); }
+    public function splitSignIn()        { abort(404); }
+    public function splitSignUp()        { abort(404); }
+    public function splitLockScreen()    { abort(404); }
+    public function splitResetPass()     { abort(404); }
+    public function splitNewPass()       { abort(404); }
+    public function splitLoginPin()      { abort(404); }
+    public function splitTwoFactor()     { abort(404); }
+    public function splitSuccessMail()   { abort(404); }
+    public function splitDeleteAccount() { abort(404); }
 }

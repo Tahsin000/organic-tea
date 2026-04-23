@@ -7,7 +7,9 @@
       "Bash(node -e \"const m = require\\('@inertiajs/vue3'\\); console.log\\(Object.keys\\(m\\)\\)\")",
       "Bash(php artisan *)",
       "Bash(npx vite *)",
-      "Bash(curl -s http://localhost:8000)"
+      "Bash(curl -s http://localhost:8000)",
+      "Bash(sqlite3 *)",
+      "Bash(mysql -u root -e \"CREATE DATABASE IF NOT EXISTS organic_tea;\")"
     ]
   }
 }

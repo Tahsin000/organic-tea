@@ -887,16 +887,19 @@
                         <div class="dropdown-divider"></div>
 
                         <!-- Lock -->
-                        <a href="auth-lock-screen.html" class="dropdown-item">
+                        <a href="#" class="dropdown-item">
                             <i class="ti ti-lock me-1 fs-lg align-middle"></i>
                             <span class="align-middle">Lock Screen</span>
                         </a>
 
                         <!-- Logout -->
-                        <a href="javascript:void(0);" class="dropdown-item fw-semibold">
-                            <i class="ti ti-logout me-1 fs-lg align-middle"></i>
-                            <span class="align-middle">Log Out</span>
-                        </a>
+                        <form method="POST" action="{{ route('admin.auth.logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item fw-semibold border-0 bg-transparent">
+                                <i class="ti ti-logout me-1 fs-lg align-middle"></i>
+                                <span class="align-middle">Log Out</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

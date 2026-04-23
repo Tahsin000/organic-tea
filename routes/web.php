@@ -41,7 +41,13 @@ Route::get('/product/{productId}', [LandingPageController::class, 'product'])->n
 Route::get('/checkout', [OrderController::class, 'create'])->name('checkout');
 Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store')->middleware('throttle:10,1');
 
-Route::prefix('admin')->name('admin.')->group(function () {
+// Admin Auth Routes (outside admin prefix - login page)
+Route::get('/admin/auth/sign-in', [AuthController::class, 'signIn'])->name('admin.auth.sign-in');
+Route::post('/admin/auth/login', [AuthController::class, 'login'])->name('admin.auth.login');
+Route::post('/admin/auth/logout', [AuthController::class, 'logout'])->name('admin.auth.logout');
+
+// Protected Admin Routes
+Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function () {
 
     // ─── Dashboard ───────────────────────────────────────────────────────────
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
@@ -218,40 +224,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/privacy-policy',     [PageController::class, 'privacyPolicy'])->name('privacy-policy');
         Route::get('/terms-conditions',   [PageController::class, 'termsConditions'])->name('terms-conditions');
         Route::get('/users-profile',      [PageController::class, 'usersProfile'])->name('users-profile');
-    });
-
-    // ─── Auth Pages ──────────────────────────────────────────────────────────
-    Route::prefix('auth')->name('auth.')->group(function () {
-        // Basic
-        Route::get('/sign-in',        [AuthController::class, 'signIn'])->name('sign-in');
-        Route::get('/sign-up',        [AuthController::class, 'signUp'])->name('sign-up');
-        Route::get('/lock-screen',    [AuthController::class, 'lockScreen'])->name('lock-screen');
-        Route::get('/reset-pass',     [AuthController::class, 'resetPass'])->name('reset-pass');
-        Route::get('/new-pass',       [AuthController::class, 'newPass'])->name('new-pass');
-        Route::get('/login-pin',      [AuthController::class, 'loginPin'])->name('login-pin');
-        Route::get('/two-factor',     [AuthController::class, 'twoFactor'])->name('two-factor');
-        Route::get('/success-mail',   [AuthController::class, 'successMail'])->name('success-mail');
-        Route::get('/delete-account', [AuthController::class, 'deleteAccount'])->name('delete-account');
-        // Card
-        Route::get('/card-sign-in',        [AuthController::class, 'cardSignIn'])->name('card-sign-in');
-        Route::get('/card-sign-up',        [AuthController::class, 'cardSignUp'])->name('card-sign-up');
-        Route::get('/card-lock-screen',    [AuthController::class, 'cardLockScreen'])->name('card-lock-screen');
-        Route::get('/card-reset-pass',     [AuthController::class, 'cardResetPass'])->name('card-reset-pass');
-        Route::get('/card-new-pass',       [AuthController::class, 'cardNewPass'])->name('card-new-pass');
-        Route::get('/card-login-pin',      [AuthController::class, 'cardLoginPin'])->name('card-login-pin');
-        Route::get('/card-two-factor',     [AuthController::class, 'cardTwoFactor'])->name('card-two-factor');
-        Route::get('/card-success-mail',   [AuthController::class, 'cardSuccessMail'])->name('card-success-mail');
-        Route::get('/card-delete-account', [AuthController::class, 'cardDeleteAccount'])->name('card-delete-account');
-        // Split
-        Route::get('/split-sign-in',        [AuthController::class, 'splitSignIn'])->name('split-sign-in');
-        Route::get('/split-sign-up',        [AuthController::class, 'splitSignUp'])->name('split-sign-up');
-        Route::get('/split-lock-screen',    [AuthController::class, 'splitLockScreen'])->name('split-lock-screen');
-        Route::get('/split-reset-pass',     [AuthController::class, 'splitResetPass'])->name('split-reset-pass');
-        Route::get('/split-new-pass',       [AuthController::class, 'splitNewPass'])->name('split-new-pass');
-        Route::get('/split-login-pin',      [AuthController::class, 'splitLoginPin'])->name('split-login-pin');
-        Route::get('/split-two-factor',     [AuthController::class, 'splitTwoFactor'])->name('split-two-factor');
-        Route::get('/split-success-mail',   [AuthController::class, 'splitSuccessMail'])->name('split-success-mail');
-        Route::get('/split-delete-account', [AuthController::class, 'splitDeleteAccount'])->name('split-delete-account');
     });
 
     // ─── Layout Options ──────────────────────────────────────────────────────

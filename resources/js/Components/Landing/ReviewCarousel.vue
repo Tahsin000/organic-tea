@@ -19,54 +19,80 @@
                 </p>
             </div>
 
-            <!-- Multi-directional review grid -->
-            <!-- Mobile: 3 cols, Desktop: 5 cols -->
-            <div class="relative h-[400px] sm:h-[500px] lg:h-[450px] overflow-hidden">
-                <!-- Column 1: moves down -->
-                <div class="absolute left-0 w-1/3 sm:w-1/5 animate-float-down px-1.5 sm:px-2">
-                    <div class="space-y-3 sm:space-y-4">
-                        <ReviewCard v-for="(review, i) in col1" :key="review.name + i" :review="review" :delay="i * 0.3" />
-                        <ReviewCard v-for="(review, i) in col1" :key="review.name + i + '-dup'" :review="review" :delay="i * 0.3" />
+            <!-- Mobile: horizontal scrolling carousel -->
+            <div class="sm:hidden">
+                <div class="mobile-scroll-wrapper overflow-hidden rounded-xl">
+                    <div class="mobile-scroll-track">
+                        <ReviewCard v-for="(review, i) in allReviews" :key="'m' + i" :review="review" />
+                        <ReviewCard v-for="(review, i) in allReviews" :key="'m' + i + 'dup'" :review="review" />
                     </div>
                 </div>
+            </div>
 
-                <!-- Column 2: moves up -->
-                <div class="absolute left-[33.33%] sm:left-[20%] w-1/3 sm:w-1/5 animate-float-up px-1.5 sm:px-2">
-                    <div class="space-y-3 sm:space-y-4">
-                        <ReviewCard v-for="(review, i) in col2" :key="review.name + i" :review="review" :delay="i * 0.4" />
-                        <ReviewCard v-for="(review, i) in col2" :key="review.name + i + '-dup'" :review="review" :delay="i * 0.4" />
+            <!-- Tablet (sm-md): 3 column vertical scroll -->
+            <div class="hidden sm:block md:hidden">
+                <div class="relative h-[500px] overflow-hidden">
+                    <div class="absolute left-0 w-1/3 animate-float-down px-1.5">
+                        <div class="space-y-3">
+                            <ReviewCard v-for="(review, i) in col1" :key="'t1' + i" :review="review" />
+                            <ReviewCard v-for="(review, i) in col1" :key="'t1' + i + 'dup'" :review="review" />
+                        </div>
                     </div>
-                </div>
-
-                <!-- Column 3 (center): moves down -->
-                <div class="hidden sm:block absolute left-[40%] sm:left-[36%] w-1/5 animate-float-down-slow px-1.5 sm:px-2">
-                    <div class="space-y-3 sm:space-y-4">
-                        <ReviewCard v-for="(review, i) in col3" :key="review.name + i" :review="review" :delay="i * 0.5" />
-                        <ReviewCard v-for="(review, i) in col3" :key="review.name + i + '-dup'" :review="review" :delay="i * 0.5" />
+                    <div class="absolute left-1/3 w-1/3 animate-float-up px-1.5">
+                        <div class="space-y-3">
+                            <ReviewCard v-for="(review, i) in col3" :key="'t3' + i" :review="review" />
+                            <ReviewCard v-for="(review, i) in col3" :key="'t3' + i + 'dup'" :review="review" />
+                        </div>
                     </div>
-                </div>
-
-                <!-- Column 4: moves up -->
-                <div class="hidden sm:block absolute left-[60%] sm:left-[54%] w-1/5 animate-float-up-slow px-1.5 sm:px-2">
-                    <div class="space-y-3 sm:space-y-4">
-                        <ReviewCard v-for="(review, i) in col4" :key="review.name + i" :review="review" :delay="i * 0.35" />
-                        <ReviewCard v-for="(review, i) in col4" :key="review.name + i + '-dup'" :review="review" :delay="i * 0.35" />
+                    <div class="absolute left-2/3 w-1/3 animate-float-down-slow px-1.5">
+                        <div class="space-y-3">
+                            <ReviewCard v-for="(review, i) in col5" :key="'t5' + i" :review="review" />
+                            <ReviewCard v-for="(review, i) in col5" :key="'t5' + i + 'dup'" :review="review" />
+                        </div>
                     </div>
+                    <div class="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-gray-50/80 to-transparent pointer-events-none z-10"></div>
+                    <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-green-50/80 to-transparent pointer-events-none z-10"></div>
                 </div>
+            </div>
 
-                <!-- Column 5: moves down -->
-                <div class="hidden sm:block absolute left-[80%] sm:left-[72%] w-1/5 animate-float-down px-1.5 sm:px-2">
-                    <div class="space-y-3 sm:space-y-4">
-                        <ReviewCard v-for="(review, i) in col5" :key="review.name + i" :review="review" :delay="i * 0.45" />
-                        <ReviewCard v-for="(review, i) in col5" :key="review.name + i + '-dup'" :review="review" :delay="i * 0.45" />
+            <!-- Desktop (lg+): 5 column vertical scroll -->
+            <div class="hidden lg:block">
+                <div class="relative h-[450px] overflow-hidden">
+                    <div class="absolute left-0 w-1/5 animate-float-down px-2">
+                        <div class="space-y-4">
+                            <ReviewCard v-for="(review, i) in col1" :key="'d1' + i" :review="review" />
+                            <ReviewCard v-for="(review, i) in col1" :key="'d1' + i + 'dup'" :review="review" />
+                        </div>
                     </div>
+                    <div class="absolute left-1/5 w-1/5 animate-float-up px-2">
+                        <div class="space-y-4">
+                            <ReviewCard v-for="(review, i) in col2" :key="'d2' + i" :review="review" />
+                            <ReviewCard v-for="(review, i) in col2" :key="'d2' + i + 'dup'" :review="review" />
+                        </div>
+                    </div>
+                    <div class="absolute left-2/5 w-1/5 animate-float-down-slow px-2">
+                        <div class="space-y-4">
+                            <ReviewCard v-for="(review, i) in col3" :key="'d3' + i" :review="review" />
+                            <ReviewCard v-for="(review, i) in col3" :key="'d3' + i + 'dup'" :review="review" />
+                        </div>
+                    </div>
+                    <div class="absolute left-3/5 w-1/5 animate-float-up-slow px-2">
+                        <div class="space-y-4">
+                            <ReviewCard v-for="(review, i) in col4" :key="'d4' + i" :review="review" />
+                            <ReviewCard v-for="(review, i) in col4" :key="'d4' + i + 'dup'" :review="review" />
+                        </div>
+                    </div>
+                    <div class="absolute left-4/5 w-1/5 animate-float-down px-2">
+                        <div class="space-y-4">
+                            <ReviewCard v-for="(review, i) in col5" :key="'d5' + i" :review="review" />
+                            <ReviewCard v-for="(review, i) in col5" :key="'d5' + i + 'dup'" :review="review" />
+                        </div>
+                    </div>
+                    <div class="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-gray-50/80 to-transparent pointer-events-none z-10"></div>
+                    <div class="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-green-50/80 to-transparent pointer-events-none z-10"></div>
+                    <div class="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-gray-50/80 to-transparent pointer-events-none z-10"></div>
+                    <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-green-50/80 to-transparent pointer-events-none z-10"></div>
                 </div>
-
-                <!-- Gradient overlays for edges -->
-                <div class="absolute inset-y-0 left-0 w-12 sm:w-16 bg-gradient-to-r from-gray-50/80 to-transparent pointer-events-none z-10"></div>
-                <div class="absolute inset-y-0 right-0 w-12 sm:w-16 bg-gradient-to-l from-green-50/80 to-transparent pointer-events-none z-10"></div>
-                <div class="absolute inset-x-0 top-0 h-12 sm:h-16 bg-gradient-to-b from-gray-50/80 to-transparent pointer-events-none z-10"></div>
-                <div class="absolute inset-x-0 bottom-0 h-12 sm:h-16 bg-gradient-to-t from-green-50/80 to-transparent pointer-events-none z-10"></div>
             </div>
 
             <!-- Stats bar -->
@@ -96,7 +122,6 @@
 import { ChatBubbleLeftRightIcon } from '@heroicons/vue/24/outline';
 import { computed } from 'vue';
 
-// ReviewCard inline component - using render function for reliability
 function renderStars(count) {
     return Array.from({ length: count }, (_, i) =>
         `<svg class="w-3.5 h-3.5 text-yellow-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.385a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>`
@@ -104,9 +129,9 @@ function renderStars(count) {
 }
 
 const ReviewCard = {
-    props: ['review', 'delay'],
+    props: ['review'],
     template: `
-        <div class="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 select-none">
+        <div class="bg-white rounded-xl p-3 sm:p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 select-none shrink-0">
             <div class="flex gap-0.5 mb-2" v-html="stars"></div>
             <p class="text-gray-600 text-xs sm:text-sm leading-relaxed line-clamp-3 mb-2">"{{ review.text }}"</p>
             <div class="flex items-center gap-2">
@@ -140,7 +165,6 @@ const allReviews = [
     { name: 'তাসনিম জাহান', location: 'রংপুর', initial: 'তা', text: 'ছেলেমেয়েরাও এখন এই চা খায়। কোনো কৃত্রিম স্বাদ নেই।', stars: 5 },
 ];
 
-// Split into columns — mobile uses first 3 only (3 cols), desktop uses all 5
 const col1 = computed(() => allReviews.slice(0, 4));
 const col2 = computed(() => allReviews.slice(2, 6));
 const col3 = computed(() => allReviews.slice(4, 8));
@@ -149,6 +173,29 @@ const col5 = computed(() => allReviews.slice(8, 12));
 </script>
 
 <style scoped>
+/* ── Mobile horizontal scroll ── */
+.mobile-scroll-wrapper {
+    overflow: hidden;
+}
+.mobile-scroll-track {
+    display: flex;
+    gap: 0.75rem;
+    animation: scroll-horizontal 40s linear infinite;
+    width: max-content;
+}
+.mobile-scroll-track:hover {
+    animation-play-state: paused;
+}
+.mobile-scroll-track > * {
+    width: 280px;
+    flex-shrink: 0;
+}
+@keyframes scroll-horizontal {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* ── Vertical infinite scroll ── */
 @keyframes float-down {
     0% { transform: translateY(-50%); }
     100% { transform: translateY(0); }
@@ -177,6 +224,7 @@ const col5 = computed(() => allReviews.slice(8, 12));
 .animate-float-up-slow {
     animation: float-up-slow 28s linear infinite;
 }
+
 /* Pause all on hover */
 section:hover .animate-float-down,
 section:hover .animate-float-up,
@@ -184,6 +232,7 @@ section:hover .animate-float-down-slow,
 section:hover .animate-float-up-slow {
     animation-play-state: paused;
 }
+
 .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
