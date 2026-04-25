@@ -98,6 +98,14 @@
                     </a>
                 </li>
 
+                <!-- Currencies -->
+                <li class="side-nav-item">
+                    <a href="{{ route('admin.ecommerce.currencies') }}" class="side-nav-link {{ request()->routeIs('admin.ecommerce.currencies') || request()->routeIs('admin.ecommerce.currency-*') ? 'active' : '' }}">
+                        <span class="menu-icon"><i class="ti ti-coin"></i></span>
+                        <span class="menu-text">Currencies</span>
+                    </a>
+                </li>
+
                 <!-- Settings -->
                 <li class="side-nav-item">
                     <a href="{{ route('admin.ecommerce.settings') }}" class="side-nav-link {{ request()->routeIs('admin.ecommerce.settings') ? 'active' : '' }}">

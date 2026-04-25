@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EcommerceController;
+use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\InvoiceController;
@@ -90,6 +91,13 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
         Route::put('/reviews/{review}',       [ReviewController::class, 'update'])->name('review-update');
         Route::delete('/reviews/{review}',    [ReviewController::class, 'destroy'])->name('review-delete');
         Route::patch('/reviews/{review}/toggle', [ReviewController::class, 'toggleStatus'])->name('review-toggle');
+        // ─── Currencies CRUD ──────────────────────────────────────────────────────
+        Route::get('/currencies',                [CurrencyController::class, 'index'])->name('currencies');
+        Route::get('/currencies/create',         [CurrencyController::class, 'create'])->name('currency-create');
+        Route::post('/currencies',               [CurrencyController::class, 'store'])->name('currency-store');
+        Route::get('/currencies/{currency}/edit',[CurrencyController::class, 'edit'])->name('currency-edit');
+        Route::put('/currencies/{currency}',     [CurrencyController::class, 'update'])->name('currency-update');
+        Route::patch('/currencies/{currency}/toggle', [CurrencyController::class, 'toggleStatus'])->name('currency-toggle');
         Route::get('/warehouse',         [EcommerceController::class, 'warehouse'])->name('warehouse');
         Route::get('/stocks',            [EcommerceController::class, 'stocks'])->name('product-stocks');
         Route::get('/purchased-orders',  [EcommerceController::class, 'purchasedOrders'])->name('purchased-orders');

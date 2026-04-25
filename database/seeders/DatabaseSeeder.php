@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
                 AdminUserSeeder::class,
                 LandingContentSeeder::class,
                 ReviewSeeder::class,
+                CurrencySeeder::class,
             ]);
         // User::factory()->create([
         //     'name' => 'Test User',
