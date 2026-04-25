@@ -7,7 +7,7 @@
         <OfferSection v-if="site.offer" :content="site.offer" />
         <ProductGallery v-if="site.product_gallery" :content="site.product_gallery" />
         <ReviewCarousel v-if="site.review" :reviews="reviews" :content="site.review" />
-        <ContactForm :products="products" />
+        <!-- <ContactForm :products="products" /> -->
         <FooterSection v-if="site.footer" :content="site.footer" />
     </div>
 </template>
