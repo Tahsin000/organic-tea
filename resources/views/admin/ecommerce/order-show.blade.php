@@ -150,7 +150,19 @@
                     <h5 class="card-title mb-3">Order Details</h5>
                     <table class="table table-borderless table-sm mb-0">
                         <tr><td class="text-muted">Order ID</td><td class="fw-semibold">#{{ $order->id }}</td></tr>
-                        <tr><td class="text-muted">Payment</td><td class="text-uppercase">{{ $order->payment_method }}</td></tr>
+                        <tr><td class="text-muted">Payment</td><td class="text-uppercase fw-semibold">{{ $order->payment_method }}</td></tr>
+                        @if($order->payment_number)
+                        <tr>
+                            <td class="text-muted">Sender No.</td>
+                            <td>{{ $order->payment_number }}</td>
+                        </tr>
+                        @endif
+                        @if($order->transaction_id)
+                        <tr>
+                            <td class="text-muted">Trx ID</td>
+                            <td><span class="badge badge-soft-info">{{ $order->transaction_id }}</span></td>
+                        </tr>
+                        @endif
                         @if($order->coupon_code)
                         <tr><td class="text-muted">Coupon</td><td>{{ $order->coupon_code }}</td></tr>
                         @endif

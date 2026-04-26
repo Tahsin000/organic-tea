@@ -82,7 +82,12 @@
                         <td>{{ $order->name }}</td>
                         <td>{{ $order->phone }}</td>
                         <td class="text-capitalize">{{ $order->city }}</td>
-                        <td class="text-uppercase">{{ $order->payment_method }}</td>
+                        <td class="text-uppercase">
+                            {{ $order->payment_method }}
+                            @if($order->transaction_id)
+                                <br><small class="text-muted" title="Transaction ID: {{ $order->transaction_id }}">Trx: {{ Str::limit($order->transaction_id, 10) }}</small>
+                            @endif
+                        </td>
                         <td class="fw-semibold">৳{{ number_format($order->total, 2) }}</td>
                         <td><span class="badge badge-soft-primary">{{ $order->items->count() }}</span></td>
                         <td>

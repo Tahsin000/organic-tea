@@ -10,7 +10,8 @@ class Order extends Model
     protected $fillable = [
         'name', 'phone', 'email', 'address', 'city',
         'delivery_charge', 'subtotal', 'discount', 'total',
-        'payment_method', 'status', 'coupon_code', 'notes',
+        'payment_method', 'payment_number', 'transaction_id',
+        'status', 'coupon_code', 'notes',
     ];
 
     public function items(): HasMany

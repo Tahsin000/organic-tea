@@ -3,7 +3,7 @@
     <div class="min-h-screen">
         <StickyRibbon :content="site.ribbon" />
         <HeroSection v-if="site.hero" :products="products" :content="site.hero" @go-product="goToProduct" />
-        <ProductOverview v-if="site.product_overview" :products="products" :content="site.product_overview" />
+        <ProductOverview v-if="Object.keys(products).length" :products="products" :content="site.product_overview || {}" />
         <OfferSection v-if="site.offer" :content="site.offer" />
         <ProductGallery v-if="site.product_gallery" :content="site.product_gallery" />
         <ReviewCarousel v-if="site.review" :reviews="reviews" :content="site.review" />

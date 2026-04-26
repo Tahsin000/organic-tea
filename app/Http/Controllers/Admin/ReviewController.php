@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\Review;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class ReviewController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Review::latest();
+        $query = Review::with('product')->latest();
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -33,21 +34,24 @@ class ReviewController extends Controller
 
     public function create()
     {
-        return view('admin.ecommerce.review-create');
+        $products = Product::active()->orderBy('sort_order')->get(['id', 'name', 'slug']);
+        return view('admin.ecommerce.review-create', compact('products'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'text'     => 'required|string',
-            'stars'    => 'required|integer|min:1|max:5',
-            'status'   => 'nullable|in:0,1',
-            'image'    => 'nullable|image|mimes:jpeg,png,jpg,webp|max:200',
+            'product_id' => 'nullable|integer|exists:products,id',
+            'name'       => 'required|string|max:255',
+            'location'   => 'nullable|string|max:255',
+            'text'       => 'required|string',
+            'stars'      => 'required|integer|min:1|max:5',
+            'status'     => 'nullable|in:0,1',
+            'image'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:200',
         ]);
 
-        $validated['status'] = $validated['status'] === '1';
+        $validated['status']     = ($validated['status'] ?? '0') === '1';
+        $validated['product_id'] = $validated['product_id'] ?: null;
 
         if ($request->hasFile('image')) {
             $validated['image'] = ImageService::upload($request->file('image'), 'reviews');
@@ -61,21 +65,24 @@ class ReviewController extends Controller
 
     public function edit(Review $review)
     {
-        return view('admin.ecommerce.review-edit', compact('review'));
+        $products = Product::active()->orderBy('sort_order')->get(['id', 'name', 'slug']);
+        return view('admin.ecommerce.review-edit', compact('review', 'products'));
     }
 
     public function update(Request $request, Review $review)
     {
         $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'text'     => 'required|string',
-            'stars'    => 'required|integer|min:1|max:5',
-            'status'   => 'nullable|in:0,1',
-            'image'    => 'nullable|image|mimes:jpeg,png,jpg,webp|max:200',
+            'product_id' => 'nullable|integer|exists:products,id',
+            'name'       => 'required|string|max:255',
+            'location'   => 'nullable|string|max:255',
+            'text'       => 'required|string',
+            'stars'      => 'required|integer|min:1|max:5',
+            'status'     => 'nullable|in:0,1',
+            'image'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:200',
         ]);
 
-        $validated['status'] = $validated['status'] === '1';
+        $validated['status']     = ($validated['status'] ?? '0') === '1';
+        $validated['product_id'] = $validated['product_id'] ?: null;
 
         if ($request->hasFile('image')) {
             $validated['image'] = ImageService::replace($review->image, $request->file('image'), 'reviews');

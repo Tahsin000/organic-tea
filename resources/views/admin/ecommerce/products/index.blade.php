@@ -1,930 +1,195 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Kijir Dashboard')
-@push('styles')
-@endpush
+@section('title', 'Products | Organic Tea Admin')
 
 @section('content')
-
-
-    <div class="container-fluid">
-        <div class="page-title-head d-flex align-items-center">
-            <div class="flex-grow-1">
-                <h4 class="page-main-title m-0">Products</h4>
-            </div>
-
-            <div class="text-end">
-                <ol class="breadcrumb m-0 py-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Hash</a></li>
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a></li>
-                    <li class="breadcrumb-item active">Products</li>
-                </ol>
-            </div>
+<div class="container-fluid">
+    <div class="page-title-head d-flex align-items-center mb-3">
+        <div class="flex-grow-1">
+            <h4 class="page-main-title m-0">Products</h4>
         </div>
-
-
-        <div class="row row-cols-xxl-5 row-cols-md-3 row-cols-1 align-items-center g-1">
-            <div class="col">
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <a href="#!" class="text-muted float-end mt-n1 fs-xl">
-                            <i class="ti ti-external-link"></i>
-                        </a>
-                        <h5 title="Total Products">Products</h5>
-                        <div class="d-flex align-items-center gap-2 my-3">
-                            <div class="avatar-md flex-shrink-0">
-                                <span class="avatar-title bg-primary-subtle text-primary rounded-circle fs-22">
-                                    <i class="ti ti-package"></i>
-                                </span>
-                            </div>
-                            <h3 class="mb-0"><span data-target="2,240">0</span></h3>
-                            <span class="badge badge-soft-success fw-medium fs-xs ms-auto">+24 New</span>
-                        </div>
-                        <p class="mb-0">
-                            <span class="text-primary">
-                                <i class="ti ti-circle-filled align-middle"></i>
-                            </span>
-                            <span class="text-nowrap text-muted">Active Listings</span>
-                            <span class="float-end"><b>980</b></span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <a href="#!" class="text-muted float-end mt-n1 fs-xl">
-                            <i class="ti ti-external-link"></i>
-                        </a>
-                        <h5 title="Customer Orders">Orders</h5>
-                        <div class="d-flex align-items-center gap-2 my-3">
-                            <div class="avatar-md flex-shrink-0">
-                                <span class="avatar-title bg-secondary-subtle text-secondary rounded-circle fs-22">
-                                    <i class="ti ti-shopping-cart"></i>
-                                </span>
-                            </div>
-                            <h3 class="mb-0"><span data-target="8,014">0</span></h3>
-                            <span class="badge badge-soft-success fw-medium fs-xs ms-auto">+120 New</span>
-                        </div>
-                        <p class="mb-0">
-                            <span class="text-secondary">
-                                <i class="ti ti-circle-filled align-middle"></i>
-                            </span>
-                            <span class="text-nowrap text-muted">Total Orders</span>
-                            <span class="float-end"><b>105K</b></span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <a href="#!" class="text-muted float-end mt-n1 fs-xl">
-                            <i class="ti ti-external-link"></i>
-                        </a>
-                        <h5 title="Sales Today">Sales</h5>
-                        <div class="d-flex align-items-center gap-2 my-3">
-                            <div class="avatar-md flex-shrink-0">
-                                <span class="avatar-title bg-success-subtle text-success rounded-circle fs-22">
-                                    <i class="ti ti-currency-dollar"></i>
-                                </span>
-                            </div>
-                            <h3 class="mb-0">$<span data-target="17,854.22">0</span></h3>
-                            <span class="badge badge-soft-success fw-medium fs-xs ms-auto">+8.2%</span>
-                        </div>
-                        <p class="mb-0">
-                            <span class="text-success">
-                                <i class="ti ti-circle-filled align-middle"></i>
-                            </span>
-                            <span class="text-nowrap text-muted">Today's Sales</span>
-                            <span class="float-end"><b>$156K</b></span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <a href="#!" class="text-muted float-end mt-n1 fs-xl">
-                            <i class="ti ti-external-link"></i>
-                        </a>
-                        <h5 title="Customer Count">Customers</h5>
-                        <div class="d-flex align-items-center gap-2 my-3">
-                            <div class="avatar-md flex-shrink-0">
-                                <span class="avatar-title bg-info-subtle text-info rounded-circle fs-22">
-                                    <i class="ti ti-users"></i>
-                                </span>
-                            </div>
-                            <h3 class="mb-0"><span data-target="3,209">0</span></h3>
-                            <span class="badge badge-soft-success fw-medium fs-xs ms-auto">+36 New</span>
-                        </div>
-                        <p class="mb-0">
-                            <span class="text-info">
-                                <i class="ti ti-circle-filled align-middle"></i>
-                            </span>
-                            <span class="text-nowrap text-muted">Total Customers</span>
-                            <span class="float-end"><b>58,320</b></span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card mb-1">
-                    <div class="card-body">
-                        <a href="#!" class="text-muted float-end mt-n1 fs-xl">
-                            <i class="ti ti-external-link"></i>
-                        </a>
-                        <h5 title="Total Revenue">Revenue</h5>
-                        <div class="d-flex align-items-center gap-2 my-3">
-                            <div class="avatar-md flex-shrink-0">
-                                <span class="avatar-title bg-warning-subtle text-warning rounded-circle fs-22">
-                                    <i class="ti ti-chart-bar"></i>
-                                </span>
-                            </div>
-                            <h3 class="mb-0">$<span data-target="3.5">0</span>M</h3>
-                            <span class="badge badge-soft-danger fw-medium fs-xs ms-auto">-4.5%</span>
-                        </div>
-                        <p class="mb-0">
-                            <span class="text-warning">
-                                <i class="ti ti-circle-filled align-middle"></i>
-                            </span>
-                            <span class="text-nowrap text-muted">Total Revenue</span>
-                            <span class="float-end"><b>$12.8M</b></span>
-                        </p>
-                    </div>
-                </div>
-            </div>
+        <div>
+            <a href="{{ route('admin.ecommerce.products.create') }}" class="btn btn-primary">
+                <i class="ti ti-plus me-1"></i> Add Product
+            </a>
         </div>
-        <!-- end row -->
-
-        <div class="row">
-            <div class="col-12">
-                <div data-table data-table-rows-per-page="8" class="card">
-                    <div class="card-header border-light justify-content-between">
-                        <div class="d-flex gap-2">
-                            <div class="app-search">
-                                <input data-table-search type="search" class="form-control"
-                                    placeholder="Search product name..." />
-                                <i class="ti ti-search app-search-icon text-muted"></i>
-                            </div>
-                            <button data-table-delete-selected class="btn btn-danger d-none">Delete</button>
-                        </div>
-
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="me-2 fw-semibold">Filter By:</span>
-
-                            <!-- Category Filter -->
-                            <div class="app-search">
-                                <select data-table-filter="category" class="form-select form-control my-1 my-md-0">
-                                    <option value="All">Category</option>
-                                    <option value="Electronics">Electronics</option>
-                                    <option value="Fashion">Fashion</option>
-                                    <option value="Home">Home</option>
-                                    <option value="Sports">Sports</option>
-                                    <option value="Beauty">Beauty</option>
-                                </select>
-                                <i class="ti ti-tag app-search-icon text-muted"></i>
-                            </div>
-
-                            <!-- Stock Filter -->
-                            <div class="app-search">
-                                <select data-table-filter="status" class="form-select form-control my-1 my-md-0">
-                                    <option value="">Status</option>
-                                    <option value="Published">Published</option>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Out of Stock">Out of Stock</option>
-                                </select>
-                                <i class="ti ti-activity app-search-icon text-muted"></i>
-                            </div>
-
-                            <!-- Price Range Filter -->
-                            <div class="app-search">
-                                <select data-table-range-filter="price" class="form-select form-control my-1 my-md-0">
-                                    <option value="">Price Range</option>
-                                    <option value="0-50">$0 - $50</option>
-                                    <option value="51-150">$51 - $150</option>
-                                    <option value="151-500">$151 - $500</option>
-                                    <option value="500+">$500+</option>
-                                </select>
-                                <i class="ti ti-currency-dollar app-search-icon text-muted"></i>
-                            </div>
-
-                            <!-- Records Per Page -->
-                            <div>
-                                <select data-table-set-rows-per-page class="form-select form-control my-1 my-md-0">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="15">15</option>
-                                    <option value="20">20</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="d-flex gap-1">
-                            <a href="apps-ecommerce-products-grid.html" class="btn btn-soft-primary btn-icon">
-                                <i class="ti ti-category fs-lg"></i>
-                            </a>
-                            <a href="apps-ecommerce-products.html" class="btn btn-soft-primary btn-icon active">
-                                <i class="ti ti-list-check fs-lg"></i>
-                            </a>
-                            <a href="apps-ecommerce-product-add.html" class="btn btn-danger ms-1">
-                                <i class="ti ti-plus fs-sm me-2"></i>
-                                Add Product
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table class="table table-custom table-centered table-select table-hover w-100 mb-0">
-                            <thead class="bg-light align-middle bg-opacity-25 thead-sm">
-                                <tr class="text-uppercase fs-xxs">
-                                    <th class="ps-3" style="width: 1%">
-                                        <input data-table-select-all
-                                            class="form-check-input form-check-input-light fs-14 mt-0" type="checkbox"
-                                            id="select-all-products" value="option" />
-                                    </th>
-                                    <th data-table-sort="product">Product</th>
-                                    <th>SKU</th>
-                                    <th data-table-sort data-column="category">Category</th>
-                                    <th data-table-sort>Stock</th>
-                                    <th data-table-sort data-column="price">Price</th>
-                                    <th data-table-sort>Orders</th>
-                                    <th data-table-sort="rating">Rating</th>
-                                    <th data-table-sort data-column="status">Status</th>
-                                    <th data-table-sort>Published</th>
-                                    <th class="text-center" style="width: 1%">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Product Row -->
-                                <tr>
-                                    <td class="ps-3">
-                                        <input
-                                            class="form-check-input form-check-input-light fs-14 product-item-check mt-0"
-                                            type="checkbox" value="option" />
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="avatar-md me-3">
-                                                <img src="assets/images/products/1.png" alt="Product"
-                                                    class="img-fluid rounded" />
-                                            </div>
-                                            <div>
-                                                <h5 class="mb-1">
-                                                    <a data-sort="product" href="apps-ecommerce-product-details.html"
-                                                        class="link-reset">Wireless Earbuds</a>
-                                                </h5>
-                                                <p class="text-muted mb-0 fs-xxs">by: My Furniture</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>WB-10245</td>
-                                    <td>Electronics</td>
-                                    <td>
-                                        <h5 class="fs-base mb-0 fw-medium">56</h5>
-                                    </td>
-                                    <td>$59.99</td>
-                                    <td>124</td>
-                                    <td>
-                                        <span class="text-warning">
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                        </span>
-                                        <span class="ms-1">
-                                            <a data-sort="rating" href="apps-ecommerce-reviews.html"
-                                                class="link-reset fw-semibold">(87)</a>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-soft-success fs-xxs">Published</span>
-                                    </td>
-                                    <td>
-                                        18 Apr, 2025
-                                        <small class="text-muted">12:24 PM</small>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-1">
-                                            <a href="apps-ecommerce-product-details.html"
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-eye fs-lg"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-edit fs-lg"></i>
-                                            </a>
-                                            <a href="#" data-table-delete-row
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-trash fs-lg"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="ps-3">
-                                        <input
-                                            class="form-check-input form-check-input-light fs-14 product-item-check mt-0"
-                                            type="checkbox" value="option" />
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="avatar-md me-3">
-                                                <img src="assets/images/products/2.png" alt="Product"
-                                                    class="img-fluid rounded" />
-                                            </div>
-                                            <div>
-                                                <h5 class="mb-1">
-                                                    <a data-sort="product" href="apps-ecommerce-product-details.html"
-                                                        class="link-reset">Smart LED Desk Lamp</a>
-                                                </h5>
-                                                <p class="text-muted mb-0 fs-xxs">by: BrightLite</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>SL-89012</td>
-                                    <td>Home & Office</td>
-                                    <td>
-                                        <h5 class="fs-base mb-0 fw-medium">32</h5>
-                                    </td>
-                                    <td>$39.49</td>
-                                    <td>78</td>
-                                    <td>
-                                        <span class="text-warning">
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star"></i>
-                                        </span>
-                                        <span class="ms-1">
-                                            <a data-sort="rating" href="apps-ecommerce-reviews.html"
-                                                class="link-reset fw-semibold">(54)</a>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-soft-warning fs-xxs">Pending</span>
-                                    </td>
-                                    <td>
-                                        22 Apr, 2025
-                                        <small class="text-muted">09:45 AM</small>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-1">
-                                            <a href="apps-ecommerce-product-details.html"
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-eye fs-lg"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-edit fs-lg"></i>
-                                            </a>
-                                            <a href="#" data-table-delete-row
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-trash fs-lg"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="ps-3">
-                                        <input
-                                            class="form-check-input form-check-input-light fs-14 product-item-check mt-0"
-                                            type="checkbox" value="option" />
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="avatar-md me-3">
-                                                <img src="assets/images/products/3.png" alt="Product"
-                                                    class="img-fluid rounded" />
-                                            </div>
-                                            <div>
-                                                <h5 class="mb-1">
-                                                    <a data-sort="product" href="apps-ecommerce-product-details.html"
-                                                        class="link-reset">Men's Running Shoes</a>
-                                                </h5>
-                                                <p class="text-muted mb-0 fs-xxs">by: ActiveWear Co.</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>RS-20450</td>
-                                    <td>Fashion</td>
-                                    <td>
-                                        <h5 class="fs-base mb-0 fw-medium">120</h5>
-                                    </td>
-                                    <td>$89.00</td>
-                                    <td>231</td>
-                                    <td>
-                                        <span class="text-warning">
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                        </span>
-                                        <span class="ms-1">
-                                            <a data-sort="rating" href="apps-ecommerce-reviews.html"
-                                                class="link-reset fw-semibold">(142)</a>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-soft-success fs-xxs">Published</span>
-                                    </td>
-                                    <td>
-                                        24 Apr, 2025
-                                        <small class="text-muted">03:10 PM</small>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-1">
-                                            <a href="apps-ecommerce-product-details.html"
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-eye fs-lg"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-edit fs-lg"></i>
-                                            </a>
-                                            <a href="#" data-table-delete-row
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-trash fs-lg"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="ps-3">
-                                        <input
-                                            class="form-check-input form-check-input-light fs-14 product-item-check mt-0"
-                                            type="checkbox" value="option" />
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="avatar-md me-3">
-                                                <img src="assets/images/products/4.png" alt="Product"
-                                                    class="img-fluid rounded" />
-                                            </div>
-                                            <div>
-                                                <h5 class="mb-1">
-                                                    <a data-sort="product" href="apps-ecommerce-product-details.html"
-                                                        class="link-reset">Fitness Tracker Watch</a>
-                                                </h5>
-                                                <p class="text-muted mb-0 fs-xxs">by: FitPulse</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>FT-67123</td>
-                                    <td>Fitness</td>
-                                    <td>
-                                        <h5 class="fs-base mb-0 fw-medium">78</h5>
-                                    </td>
-                                    <td>$49.95</td>
-                                    <td>198</td>
-                                    <td>
-                                        <span class="text-warning">
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star"></i>
-                                        </span>
-                                        <span class="ms-1">
-                                            <a data-sort="rating" href="apps-ecommerce-reviews.html"
-                                                class="link-reset fw-semibold">(89)</a>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-soft-success fs-xxs">Published</span>
-                                    </td>
-                                    <td>
-                                        23 Apr, 2025
-                                        <small class="text-muted">10:12 AM</small>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-1">
-                                            <a href="apps-ecommerce-product-details.html"
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-eye fs-lg"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-edit fs-lg"></i>
-                                            </a>
-                                            <a href="#" data-table-delete-row
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-trash fs-lg"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="ps-3">
-                                        <input
-                                            class="form-check-input form-check-input-light fs-14 product-item-check mt-0"
-                                            type="checkbox" value="option" />
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="avatar-md me-3">
-                                                <img src="assets/images/products/5.png" alt="Product"
-                                                    class="img-fluid rounded" />
-                                            </div>
-                                            <div>
-                                                <h5 class="mb-1">
-                                                    <a data-sort="product" href="apps-ecommerce-product-details.html"
-                                                        class="link-reset">Gaming Mouse RGB</a>
-                                                </h5>
-                                                <p class="text-muted mb-0 fs-xxs">by: HyperClick</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>GM-72109</td>
-                                    <td>Gaming</td>
-                                    <td>
-                                        <h5 class="fs-base mb-0 fw-medium">120</h5>
-                                    </td>
-                                    <td>$29.99</td>
-                                    <td>243</td>
-                                    <td>
-                                        <span class="text-warning">
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star"></i>
-                                            <i class="ti ti-star"></i>
-                                        </span>
-                                        <span class="ms-1">
-                                            <a data-sort="rating" href="apps-ecommerce-reviews.html"
-                                                class="link-reset fw-semibold">(102)</a>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-soft-success fs-xxs">Published</span>
-                                    </td>
-                                    <td>
-                                        19 Apr, 2025
-                                        <small class="text-muted">05:56 PM</small>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-1">
-                                            <a href="apps-ecommerce-product-details.html"
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-eye fs-lg"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-edit fs-lg"></i>
-                                            </a>
-                                            <a href="#" data-table-delete-row
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-trash fs-lg"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="ps-3">
-                                        <input
-                                            class="form-check-input form-check-input-light fs-14 product-item-check mt-0"
-                                            type="checkbox" value="option" />
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="avatar-md me-3">
-                                                <img src="assets/images/products/6.png" alt="Product"
-                                                    class="img-fluid rounded" />
-                                            </div>
-                                            <div>
-                                                <h5 class="mb-1">
-                                                    <a data-sort="product" href="apps-ecommerce-product-details.html"
-                                                        class="link-reset">Modern Lounge Chair</a>
-                                                </h5>
-                                                <p class="text-muted mb-0 fs-xxs">by: UrbanLiving</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>FC-31220</td>
-                                    <td>Furniture</td>
-                                    <td>
-                                        <h5 class="fs-base mb-0 fw-medium">24</h5>
-                                    </td>
-                                    <td>$199.00</td>
-                                    <td>38</td>
-                                    <td>
-                                        <span class="text-warning">
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                        </span>
-                                        <span class="ms-1">
-                                            <a data-sort="rating" href="apps-ecommerce-reviews.html"
-                                                class="link-reset fw-semibold">(27)</a>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-soft-danger fs-xxs">Out of Stock</span>
-                                    </td>
-                                    <td>
-                                        18 Apr, 2025
-                                        <small class="text-muted">11:30 AM</small>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-1">
-                                            <a href="apps-ecommerce-product-details.html"
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-eye fs-lg"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-edit fs-lg"></i>
-                                            </a>
-                                            <a href="#" data-table-delete-row
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-trash fs-lg"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="ps-3">
-                                        <input
-                                            class="form-check-input form-check-input-light fs-14 product-item-check mt-0"
-                                            type="checkbox" value="option" />
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="avatar-md me-3">
-                                                <img src="assets/images/products/7.png" alt="Product"
-                                                    class="img-fluid rounded" />
-                                            </div>
-                                            <div>
-                                                <h5 class="mb-1">
-                                                    <a data-sort="product" href="apps-ecommerce-product-details.html"
-                                                        class="link-reset">Plush Toy Bear</a>
-                                                </h5>
-                                                <p class="text-muted mb-0 fs-xxs">by: Softies</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>TY-00788</td>
-                                    <td>Toys</td>
-                                    <td>
-                                        <h5 class="fs-base mb-0 fw-medium">150</h5>
-                                    </td>
-                                    <td>$15.99</td>
-                                    <td>305</td>
-                                    <td>
-                                        <span class="text-warning">
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star"></i>
-                                        </span>
-                                        <span class="ms-1">
-                                            <a data-sort="rating" href="apps-ecommerce-reviews.html"
-                                                class="link-reset fw-semibold">(120)</a>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-soft-success fs-xxs">Published</span>
-                                    </td>
-                                    <td>
-                                        17 Apr, 2025
-                                        <small class="text-muted">04:21 PM</small>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-1">
-                                            <a href="apps-ecommerce-product-details.html"
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-eye fs-lg"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-edit fs-lg"></i>
-                                            </a>
-                                            <a href="#" data-table-delete-row
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-trash fs-lg"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="ps-3">
-                                        <input
-                                            class="form-check-input form-check-input-light fs-14 product-item-check mt-0"
-                                            type="checkbox" value="option" />
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="avatar-md me-3">
-                                                <img src="assets/images/products/8.png" alt="Product"
-                                                    class="img-fluid rounded" />
-                                            </div>
-                                            <div>
-                                                <h5 class="mb-1">
-                                                    <a data-sort="product" href="apps-ecommerce-product-details.html"
-                                                        class="link-reset">55" Ultra HD Smart TV</a>
-                                                </h5>
-                                                <p class="text-muted mb-0 fs-xxs">by: ViewMaster</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>TV-5588</td>
-                                    <td>Electronics</td>
-                                    <td>
-                                        <h5 class="fs-base mb-0 fw-medium">64</h5>
-                                    </td>
-                                    <td>$499.00</td>
-                                    <td>142</td>
-                                    <td>
-                                        <span class="text-warning">
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star"></i>
-                                        </span>
-                                        <span class="ms-1">
-                                            <a data-sort="rating" href="apps-ecommerce-reviews.html"
-                                                class="link-reset fw-semibold">(88)</a>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-soft-success fs-xxs">Published</span>
-                                    </td>
-                                    <td>
-                                        25 Apr, 2025
-                                        <small class="text-muted">10:10 AM</small>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-1">
-                                            <a href="apps-ecommerce-product-details.html"
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-eye fs-lg"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-edit fs-lg"></i>
-                                            </a>
-                                            <a href="#" data-table-delete-row
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-trash fs-lg"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="ps-3">
-                                        <input
-                                            class="form-check-input form-check-input-light fs-14 product-item-check mt-0"
-                                            type="checkbox" value="option" />
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="avatar-md me-3">
-                                                <img src="assets/images/products/9.png" alt="Product"
-                                                    class="img-fluid rounded" />
-                                            </div>
-                                            <div>
-                                                <h5 class="mb-1">
-                                                    <a data-sort="product" href="apps-ecommerce-product-details.html"
-                                                        class="link-reset">Apple iMac 24" M3</a>
-                                                </h5>
-                                                <p class="text-muted mb-0 fs-xxs">by: Apple</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>IMAC-M3-24</td>
-                                    <td>Computers</td>
-                                    <td>
-                                        <h5 class="fs-base mb-0 fw-medium">18</h5>
-                                    </td>
-                                    <td>$1,399.00</td>
-                                    <td>29</td>
-                                    <td>
-                                        <span class="text-warning">
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                        </span>
-                                        <span class="ms-1">
-                                            <a data-sort="rating" href="apps-ecommerce-reviews.html"
-                                                class="link-reset fw-semibold">(16)</a>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-soft-warning fs-xxs">Pending</span>
-                                    </td>
-                                    <td>
-                                        24 Apr, 2025
-                                        <small class="text-muted">02:14 PM</small>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-1">
-                                            <a href="apps-ecommerce-product-details.html"
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-eye fs-lg"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-edit fs-lg"></i>
-                                            </a>
-                                            <a href="#" data-table-delete-row
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-trash fs-lg"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="ps-3">
-                                        <input
-                                            class="form-check-input form-check-input-light fs-14 product-item-check mt-0"
-                                            type="checkbox" value="option" />
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="avatar-md me-3">
-                                                <img src="assets/images/products/10.png" alt="Product"
-                                                    class="img-fluid rounded" />
-                                            </div>
-                                            <div>
-                                                <h5 class="mb-1">
-                                                    <a data-sort="product" href="apps-ecommerce-product-details.html"
-                                                        class="link-reset">Smart Watch Pro X2</a>
-                                                </h5>
-                                                <p class="text-muted mb-0 fs-xxs">by: FitTech</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>SWPX2-GL</td>
-                                    <td>Wearables</td>
-                                    <td>
-                                        <h5 class="fs-base mb-0 fw-medium">85</h5>
-                                    </td>
-                                    <td>$149.50</td>
-                                    <td>197</td>
-                                    <td>
-                                        <span class="text-warning">
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star-filled"></i>
-                                            <i class="ti ti-star"></i>
-                                        </span>
-                                        <span class="ms-1">
-                                            <a data-sort="rating" href="apps-ecommerce-reviews.html"
-                                                class="link-reset fw-semibold">(65)</a>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-soft-success fs-xxs">Published</span>
-                                    </td>
-                                    <td>
-                                        23 Apr, 2025
-                                        <small class="text-muted">08:00 AM</small>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-1">
-                                            <a href="apps-ecommerce-product-details.html"
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-eye fs-lg"></i>
-                                            </a>
-                                            <a href="#" class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-edit fs-lg"></i>
-                                            </a>
-                                            <a href="#" data-table-delete-row
-                                                class="btn btn-default btn-icon btn-sm">
-                                                <i class="ti ti-trash fs-lg"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="card-footer border-0">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div data-table-pagination-info="products"></div>
-                            <div data-table-pagination></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end col -->
-        </div>
-        <!-- end row -->
     </div>
 
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
+    <div class="card">
+        <div class="card-header border-light justify-content-between">
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <form method="GET" action="{{ route('admin.ecommerce.products.index') }}" class="d-flex flex-wrap gap-2 align-items-center">
+                    <div class="app-search">
+                        <input type="text" name="search" class="form-control" placeholder="Search products..." value="{{ request('search') }}" />
+                        <i class="ti ti-search app-search-icon text-muted"></i>
+                    </div>
+                    <div>
+                        <select name="status" class="form-select form-control my-1 my-md-0">
+                            <option value="">All Status</option>
+                            <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-soft-primary btn-sm">
+                        <i class="ti ti-filter-2 me-1"></i> Filter
+                    </button>
+                    @if(request('search') || request('status'))
+                        <a href="{{ route('admin.ecommerce.products.index') }}" class="btn btn-soft-danger btn-sm">
+                            <i class="ti ti-x me-1"></i> Clear
+                        </a>
+                    @endif
+                </form>
+            </div>
+            <div class="ms-auto">
+                <span class="text-muted fs-sm">{{ $products->total() }} total products</span>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-custom table-centered table-hover w-100 mb-0">
+                <thead class="bg-light bg-opacity-25 thead-sm">
+                    <tr>
+                        <th>ID</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Price / Original</th>
+                        <th>Stock</th>
+                        <th>Badge</th>
+                        <th>Status</th>
+                        <th>Sort</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($products as $product)
+                    <tr>
+                        <td><span class="fw-semibold">#{{ $product->id }}</span></td>
+                        <td>
+                            <img src="{{ $product->thumbnail_url }}" alt="{{ $product->name }}"
+                                 class="rounded" style="width:50px;height:50px;object-fit:cover;" />
+                        </td>
+                        <td>
+                            <div>
+                                <span class="fw-semibold">{{ $product->name }}</span>
+                                <small class="d-block text-muted">{{ $product->slug }}</small>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="fw-bold text-success">৳{{ number_format($product->price) }}</span>
+                            <span class="text-muted text-decoration-line-through ms-1 small">৳{{ number_format($product->original_price) }}</span>
+                            <span class="badge bg-danger ms-1">{{ $product->discount_percent }}% off</span>
+                        </td>
+                        <td>
+                            @if($product->stock <= 10)
+                                <span class="badge badge-soft-danger">{{ $product->stock }} left!</span>
+                            @elseif($product->stock <= 30)
+                                <span class="badge badge-soft-warning">{{ $product->stock }}</span>
+                            @else
+                                <span class="badge badge-soft-success">{{ $product->stock }}</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($product->badge)
+                                <span class="badge bg-light text-dark">{{ $product->badge }}</span>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
+                        <td>
+                            <form action="{{ route('admin.ecommerce.products.toggle', $product) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('PATCH')
+                                @if($product->is_active)
+                                    <button type="submit" class="badge badge-soft-success border-0" title="Click to deactivate">Active</button>
+                                @else
+                                    <button type="submit" class="badge badge-soft-danger border-0" title="Click to activate">Inactive</button>
+                                @endif
+                            </form>
+                        </td>
+                        <td>{{ $product->sort_order }}</td>
+                        <td>
+                            <div class="d-flex justify-content-center gap-1">
+                                <a href="{{ route('admin.ecommerce.products.edit', $product) }}"
+                                   class="btn btn-default btn-icon btn-sm" title="Edit">
+                                    <i class="ti ti-edit fs-lg"></i>
+                                </a>
+                                <button type="button" class="btn btn-default btn-icon btn-sm"
+                                        data-bs-toggle="modal" data-bs-target="#deleteProductModal"
+                                        data-product-id="{{ $product->id }}" data-product-name="{{ $product->name }}"
+                                        title="Delete">
+                                    <i class="ti ti-trash fs-lg"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="9" class="text-center py-4">
+                            <div class="text-muted">
+                                <i class="ti ti-package-off fs-1"></i>
+                                <p class="mt-2">No products found</p>
+                                <a href="{{ route('admin.ecommerce.products.create') }}" class="btn btn-primary btn-sm">
+                                    <i class="ti ti-plus me-1"></i> Add Product
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer border-0">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted fs-sm">
+                    Showing {{ $products->firstItem() ?? 0 }} to {{ $products->lastItem() ?? 0 }} of {{ $products->total() }} results
+                </div>
+                <div>{{ $products->links('pagination::bootstrap-5') }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Product Modal -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Product</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Are you sure you want to delete <strong id="delete-product-name"></strong>?
+                This will also remove all product images from storage. This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <form id="delete-product-form" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="ti ti-trash me-1"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+<script>
+document.getElementById('deleteProductModal').addEventListener('show.bs.modal', function (e) {
+    var btn = e.relatedTarget;
+    document.getElementById('delete-product-name').textContent = btn.getAttribute('data-product-name');
+    document.getElementById('delete-product-form').action = '/admin/ecommerce/products-manage/' + btn.getAttribute('data-product-id');
+});
+</script>
+@endpush

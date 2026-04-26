@@ -84,9 +84,25 @@
 
                 <!-- Products -->
                 <li class="side-nav-item">
-                    <a href="{{ route('admin.ecommerce.products') }}" class="side-nav-link {{ request()->routeIs('admin.ecommerce.products') ? 'active' : '' }}">
+                    <a href="{{ route('admin.ecommerce.products.index') }}" class="side-nav-link {{ request()->routeIs('admin.ecommerce.products.*') ? 'active' : '' }}">
                         <span class="menu-icon"><i class="ti ti-package"></i></span>
-                        <span class="menu-text">Product Table</span>
+                        <span class="menu-text">Products</span>
+                    </a>
+                </li>
+
+                <!-- Delivery Charges -->
+                <li class="side-nav-item">
+                    <a href="{{ route('admin.ecommerce.delivery-charges.index') }}" class="side-nav-link {{ request()->routeIs('admin.ecommerce.delivery-charges.*') ? 'active' : '' }}">
+                        <span class="menu-icon"><i class="ti ti-truck-delivery"></i></span>
+                        <span class="menu-text">Delivery Charges</span>
+                    </a>
+                </li>
+
+                <!-- Payment Methods -->
+                <li class="side-nav-item">
+                    <a href="{{ route('admin.ecommerce.payment-methods.index') }}" class="side-nav-link {{ request()->routeIs('admin.ecommerce.payment-methods.*') ? 'active' : '' }}">
+                        <span class="menu-icon"><i class="ti ti-credit-card"></i></span>
+                        <span class="menu-text">Payment Methods</span>
                     </a>
                 </li>
 

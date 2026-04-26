@@ -64,6 +64,7 @@
                         <th>Image</th>
                         <th>Name</th>
                         <th>Location</th>
+                        <th>Product</th>
                         <th>Review</th>
                         <th>Stars</th>
                         <th>Status</th>
@@ -84,6 +85,13 @@
                         </td>
                         <td>{{ $review->name }}</td>
                         <td>{{ $review->location ?? '-' }}</td>
+                        <td>
+                            @if($review->product_id && $review->product)
+                                <span class="badge badge-soft-primary">{{ $review->product->name }}</span>
+                            @else
+                                <span class="text-muted">General</span>
+                            @endif
+                        </td>
                         <td>{{ Str::limit($review->text, 50) }}</td>
                         <td>
                             @for($i = 0; $i < $review->stars; $i++)
@@ -122,7 +130,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="text-center py-4">
+                        <td colspan="10" class="text-center py-4">
                             <div class="text-muted">
                                 <i class="ti ti-star-off fs-1"></i>
                                 <p class="mt-2">No reviews found</p>

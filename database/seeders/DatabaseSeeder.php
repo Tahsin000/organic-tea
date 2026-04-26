@@ -12,20 +12,27 @@ class DatabaseSeeder extends Seeder
 
     /**
      * Seed the application's database.
+     *
+     * Order matters when FKs are involved:
+     *  1. Admin user (no FKs)
+     *  2. Products (no FKs)           → products table
+     *  3. ProductSeeder               → product_images, product_tags (FK → products)
+     *  4. Reviews                     → reviews (FK → products after migration)
+     *  5. DeliveryCharges             → no FKs
+     *  6. PaymentMethods              → no FKs
+     *  7. Currencies                  → no FKs
+     *  8. Landing content (user data) → depends on admin user existing
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-            $this->call([
-                AdminUserSeeder::class,
-                LandingContentSeeder::class,
-                ReviewSeeder::class,
-                CurrencySeeder::class,
-            ]);
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $this->call([
+            AdminUserSeeder::class,
+            DeliveryChargeSeeder::class,
+            PaymentMethodSeeder::class,
+            ProductSeeder::class,          // FK: none (primary table)
+            ReviewSeeder::class,           // FK: product_id (nullable)
+            CurrencySeeder::class,
+            LandingContentSeeder::class,   // depends on admin user
+        ]);
     }
 }

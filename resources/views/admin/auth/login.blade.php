@@ -58,6 +58,7 @@
                                 <input class="form-check-input form-check-input-light fs-14" type="checkbox" name="remember" id="rememberMe">
                                 <label class="form-check-label" for="rememberMe">Keep me signed in</label>
                             </div>
+                            <a href="#" class="text-decoration-underline link-offset-3 text-muted">Forgot Password?</a>
                         </div>
 
                         <div class="d-grid">

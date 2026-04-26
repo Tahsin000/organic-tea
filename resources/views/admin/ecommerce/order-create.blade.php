@@ -52,12 +52,14 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="city" class="form-label">City <span class="text-danger">*</span></label>
+                                    <label for="city" class="form-label">City / Area <span class="text-danger">*</span></label>
                                     <select name="city" id="city" class="form-select @error('city') is-invalid @enderror" required onchange="updateDeliveryCharge()">
-                                        <option value="">Select city</option>
-                                        <option value="dhaka" {{ old('city') === 'dhaka' ? 'selected' : '' }}>Dhaka (৳60)</option>
-                                        <option value="chittagong" {{ old('city') === 'chittagong' ? 'selected' : '' }}>Chittagong (৳60)</option>
-                                        <option value="outside" {{ old('city') === 'outside' ? 'selected' : '' }}>Outside City (৳120)</option>
+                                        <option value="">Select area</option>
+                                        @foreach($deliveryCharges as $dc)
+                                        <option value="{{ $dc->area_key }}" {{ old('city') === $dc->area_key ? 'selected' : '' }}>
+                                            {{ $dc->area_name }} (৳{{ number_format($dc->charge, 0) }})
+                                        </option>
+                                        @endforeach
                                     </select>
                                     @error('city')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
@@ -74,10 +76,15 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="payment_method" class="form-label">Payment Method <span class="text-danger">*</span></label>
-                                    <select name="payment_method" id="payment_method" class="form-select @error('payment_method') is-invalid @enderror" required>
-                                        <option value="cod" {{ old('payment_method') === 'cod' ? 'selected' : '' }}>Cash on Delivery</option>
-                                        <option value="bkash" {{ old('payment_method') === 'bkash' ? 'selected' : '' }}>bKash</option>
-                                        <option value="nagad" {{ old('payment_method') === 'nagad' ? 'selected' : '' }}>Nagad</option>
+                                    <select name="payment_method" id="payment_method" class="form-select @error('payment_method') is-invalid @enderror" required onchange="toggleTransactionFields()">
+                                        <option value="">Select payment method</option>
+                                        @foreach($paymentMethods as $pm)
+                                        <option value="{{ $pm->key }}"
+                                                data-requires="{{ $pm->requires_transaction ? '1' : '0' }}"
+                                                {{ old('payment_method') === $pm->key ? 'selected' : '' }}>
+                                            {{ $pm->name }}
+                                        </option>
+                                        @endforeach
                                     </select>
                                     @error('payment_method')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
@@ -86,6 +93,26 @@
                                 <div class="mb-3">
                                     <label for="coupon_code" class="form-label">Coupon Code</label>
                                     <input type="text" name="coupon_code" id="coupon_code" class="form-control" value="{{ old('coupon_code') }}" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Transaction fields (shown for bKash/Nagad etc.) -->
+                        <div id="transaction-fields" style="display:none;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="payment_number" class="form-label">Sender Number <span class="text-danger">*</span></label>
+                                        <input type="text" name="payment_number" id="payment_number" class="form-control @error('payment_number') is-invalid @enderror" value="{{ old('payment_number') }}" placeholder="Number used to send payment" />
+                                        @error('payment_number')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="transaction_id" class="form-label">Transaction ID <span class="text-danger">*</span></label>
+                                        <input type="text" name="transaction_id" id="transaction_id" class="form-control @error('transaction_id') is-invalid @enderror" value="{{ old('transaction_id') }}" placeholder="e.g. 8N3XXXXXX" />
+                                        @error('transaction_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -160,8 +187,18 @@
 <input type="hidden" name="items" id="items-json" form="order-form" />
 
 @push('scripts')
+@php
+$productsJs = $products->map(fn($p) => [
+    'id'             => $p->id,
+    'name'           => $p->name,
+    'price'          => $p->price,
+    'original_price' => $p->original_price,
+]);
+$deliveryChargesJs = $deliveryCharges->pluck('charge', 'area_key');
+@endphp
 <script>
-const products = @json($products);
+const products = @json($productsJs);
+const deliveryCharges = @json($deliveryChargesJs);
 
 function addItemRow(selectedId = '', selectedQty = 1) {
     const tbody = document.getElementById('items-body');
@@ -170,7 +207,7 @@ function addItemRow(selectedId = '', selectedQty = 1) {
 
     let options = '<option value="">Select product</option>';
     for (const [id, p] of Object.entries(products)) {
-        const sel = id === selectedId ? 'selected' : '';
+        const sel = String(id) === String(selectedId) ? 'selected' : '';
         options += `<option value="${id}" ${sel}>${p.name} (৳${p.price})</option>`;
     }
 
@@ -223,15 +260,28 @@ function updateTotals() {
 
 function getDeliveryCharge() {
     const city = document.getElementById('city').value;
-    return (city === 'dhaka' || city === 'chittagong') ? 60 : 120;
+    return deliveryCharges[city] ?? 0;
 }
 
 function updateDeliveryCharge() {
     updateTotals();
 }
 
-// Add one empty row on page load
-addItemRow();
+function toggleTransactionFields() {
+    const sel = document.getElementById('payment_method');
+    const opt = sel.options[sel.selectedIndex];
+    const requires = opt && opt.dataset.requires === '1';
+    const block = document.getElementById('transaction-fields');
+    block.style.display = requires ? '' : 'none';
+    document.getElementById('payment_number').required = requires;
+    document.getElementById('transaction_id').required = requires;
+}
+
+// Restore transaction fields visibility on page load (after validation error)
+document.addEventListener('DOMContentLoaded', function () {
+    toggleTransactionFields();
+    addItemRow();
+});
 </script>
 @endpush
 @endsection

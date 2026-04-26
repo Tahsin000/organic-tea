@@ -7,6 +7,9 @@ use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EcommerceController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\DeliveryChargeController;
+use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\TaskController;
@@ -61,10 +64,21 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
         Route::get('/projects',  [DashboardController::class, 'projects'])->name('projects');
     });
 
-    // ─── Ecommerce ───────────────────────────────────────────────────────────
+    // ─── Ecommerce ─────────────────────────────────────
     Route::prefix('ecommerce')->name('ecommerce.')->group(function () {
         Route::get('/products',          [EcommerceController::class, 'products'])->name('products');
         Route::get('/products/grid',     [EcommerceController::class, 'productsGrid'])->name('products-grid');
+
+        // ─── Products CRUD ──────────────────────────────────────────────────────
+        Route::get('/products-manage',              [ProductController::class, 'index'])->name('products.index');
+        Route::get('/products-manage/create',       [ProductController::class, 'create'])->name('products.create');
+        Route::post('/products-manage',             [ProductController::class, 'store'])->name('products.store');
+        Route::get('/products-manage/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+        Route::put('/products-manage/{product}',    [ProductController::class, 'update'])->name('products.update');
+        Route::delete('/products-manage/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+        Route::patch('/products-manage/{product}/toggle', [ProductController::class, 'toggleStatus'])->name('products.toggle');
+        Route::delete('/products-manage/{product}/images/{image}', [ProductController::class, 'destroyImage'])->name('products.image.destroy');
+
         Route::get('/products/details',  [EcommerceController::class, 'productDetails'])->name('product-details');
         Route::get('/products/add',      [EcommerceController::class, 'productAdd'])->name('product-add');
         Route::get('/categories',        [EcommerceController::class, 'categories'])->name('categories');
@@ -98,6 +112,22 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
         Route::get('/currencies/{currency}/edit',[CurrencyController::class, 'edit'])->name('currency-edit');
         Route::put('/currencies/{currency}',     [CurrencyController::class, 'update'])->name('currency-update');
         Route::patch('/currencies/{currency}/toggle', [CurrencyController::class, 'toggleStatus'])->name('currency-toggle');
+        // ─── Delivery Charges CRUD ────────────────────────────────────────────────
+        Route::get('/delivery-charges',                     [DeliveryChargeController::class, 'index'])->name('delivery-charges.index');
+        Route::get('/delivery-charges/create',              [DeliveryChargeController::class, 'create'])->name('delivery-charges.create');
+        Route::post('/delivery-charges',                    [DeliveryChargeController::class, 'store'])->name('delivery-charges.store');
+        Route::get('/delivery-charges/{deliveryCharge}/edit', [DeliveryChargeController::class, 'edit'])->name('delivery-charges.edit');
+        Route::put('/delivery-charges/{deliveryCharge}',    [DeliveryChargeController::class, 'update'])->name('delivery-charges.update');
+        Route::delete('/delivery-charges/{deliveryCharge}', [DeliveryChargeController::class, 'destroy'])->name('delivery-charges.destroy');
+        Route::patch('/delivery-charges/{deliveryCharge}/toggle', [DeliveryChargeController::class, 'toggleStatus'])->name('delivery-charges.toggle');
+        // ─── Payment Methods CRUD ────────────────────────────────────────────────
+        Route::get('/payment-methods',                      [PaymentMethodController::class, 'index'])->name('payment-methods.index');
+        Route::get('/payment-methods/create',               [PaymentMethodController::class, 'create'])->name('payment-methods.create');
+        Route::post('/payment-methods',                     [PaymentMethodController::class, 'store'])->name('payment-methods.store');
+        Route::get('/payment-methods/{paymentMethod}/edit', [PaymentMethodController::class, 'edit'])->name('payment-methods.edit');
+        Route::put('/payment-methods/{paymentMethod}',      [PaymentMethodController::class, 'update'])->name('payment-methods.update');
+        Route::delete('/payment-methods/{paymentMethod}',   [PaymentMethodController::class, 'destroy'])->name('payment-methods.destroy');
+        Route::patch('/payment-methods/{paymentMethod}/toggle', [PaymentMethodController::class, 'toggleStatus'])->name('payment-methods.toggle');
         Route::get('/warehouse',         [EcommerceController::class, 'warehouse'])->name('warehouse');
         Route::get('/stocks',            [EcommerceController::class, 'stocks'])->name('product-stocks');
         Route::get('/purchased-orders',  [EcommerceController::class, 'purchasedOrders'])->name('purchased-orders');

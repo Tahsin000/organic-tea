@@ -32,6 +32,20 @@
                 @csrf
 
                 <div class="mb-3">
+                    <label for="product_id" class="form-label">Linked Product <span class="text-muted fw-normal">(optional)</span></label>
+                    <select name="product_id" id="product_id" class="form-select @error('product_id') is-invalid @enderror">
+                        <option value="">— General review (not product-specific) —</option>
+                        @foreach($products as $product)
+                            <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
+                                {{ $product->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <small class="text-muted">Linked reviews appear on the product detail page.</small>
+                    @error('product_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="mb-3">
                     <label for="name" class="form-label">Reviewer Name <span class="text-danger">*</span></label>
                     <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required />
                     @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror

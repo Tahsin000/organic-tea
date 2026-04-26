@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DeliveryCharge;
+use App\Models\PaymentMethod;
+use App\Models\Product;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -44,8 +47,17 @@ class LandingPageController extends Controller
             }
         }
 
+        $products = Cache::remember('active_products', now()->addHours(6), function () {
+            return Product::active()
+                ->with(['images', 'tags'])
+                ->orderBy('sort_order')
+                ->get()
+                ->keyBy('slug')
+                ->map(fn ($p) => $p->toFrontendArray());
+        });
+
         return Inertia::render('LandingPage', [
-            'products' => config('products'),
+            'products' => $products,
             'reviews'  => $reviews,
             'site'     => $activeSettings,
         ]);
@@ -53,18 +65,29 @@ class LandingPageController extends Controller
 
     public function product(Request $request)
     {
-        $products = config('products');
-        $productId = $request->route('productId');
-        $product = $products[$productId] ?? abort(404);
+        $slug    = $request->route('productId'); // route param kept as productId for compatibility
+        $product = Product::active()
+            ->with(['images', 'tags'])
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        $allProducts = Cache::remember('active_products', now()->addHours(6), function () {
+            return Product::active()
+                ->with(['images', 'tags'])
+                ->orderBy('sort_order')
+                ->get()
+                ->keyBy('slug')
+                ->map(fn ($p) => $p->toFrontendArray());
+        });
 
         $siteSettings = Cache::remember('site_settings', now()->addHours(24), function () {
             return User::getSiteSettings();
         });
 
         return Inertia::render('ProductDetail', [
-            'product' => $product,
-            'products' => $products,
-            'site' => $siteSettings,
+            'product'  => $product->toFrontendArray(),
+            'products' => $allProducts,
+            'site'     => $siteSettings,
         ]);
     }
 }

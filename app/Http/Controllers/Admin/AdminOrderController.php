@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\DeliveryCharge;
 use App\Models\Order;
+use App\Models\PaymentMethod;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
@@ -34,45 +37,61 @@ class AdminOrderController extends Controller
 
     public function create()
     {
-        $products = config('products');
-        return view('admin.ecommerce.order-create', compact('products'));
+        $products        = Product::active()->orderBy('sort_order')->get(['id', 'name', 'price', 'original_price', 'slug'])->keyBy('id');
+        $deliveryCharges = DeliveryCharge::active()->orderBy('sort_order')->get();
+        $paymentMethods  = PaymentMethod::active()->orderBy('sort_order')->get();
+        return view('admin.ecommerce.order-create', compact('products', 'deliveryCharges', 'paymentMethods'));
     }
 
     public function store(Request $request)
     {
+        $deliveryCharges   = DeliveryCharge::active()->get()->keyBy('area_key');
+        $activeAreaKeys    = $deliveryCharges->keys()->toArray();
+        $activePaymentKeys = PaymentMethod::active()->pluck('key')->toArray();
+
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'address' => 'required|string',
-            'city' => 'required|string|in:dhaka,chittagong,outside',
-            'payment_method' => 'required|string|in:cod,bkash,nagad',
-            'items' => 'required|array|min:1',
+            'name'               => 'required|string|max:255',
+            'phone'              => 'required|string|max:20',
+            'email'              => 'nullable|email|max:255',
+            'address'            => 'required|string',
+            'city'               => 'required|string|in:' . implode(',', $activeAreaKeys),
+            'payment_method'     => 'required|string|in:' . implode(',', $activePaymentKeys),
+            'payment_number'     => 'nullable|string|max:50',
+            'transaction_id'     => 'nullable|string|max:100',
+            'items'              => 'required|array|min:1',
             'items.*.product_id' => 'required|string',
-            'items.*.quantity' => 'required|integer|min:1',
-            'coupon_code' => 'nullable|string|max:50',
-            'notes' => 'nullable|string|max:500',
+            'items.*.quantity'   => 'required|integer|min:1',
+            'coupon_code'        => 'nullable|string|max:50',
+            'notes'              => 'nullable|string|max:500',
         ]);
 
-        $products = config('products');
-        $deliveryCharge = in_array($validated['city'], ['dhaka', 'chittagong']) ? 60 : 120;
+        // Require transaction fields if the selected method needs them
+        $selectedMethod = PaymentMethod::where('key', $validated['payment_method'])->first();
+        if ($selectedMethod && $selectedMethod->requires_transaction) {
+            $request->validate([
+                'payment_number' => 'required|string|max:50',
+                'transaction_id' => 'required|string|max:100',
+            ]);
+        }
 
-        $subtotal = 0;
-        $orderItems = [];
+        $deliveryCharge = $deliveryCharges->get($validated['city'])?->charge ?? 0;
+
+        $products    = Product::active()->get()->keyBy('id');
+        $subtotal    = 0;
+        $orderItems  = [];
         foreach ($validated['items'] as $item) {
-            $product = $products[$item['product_id']] ?? null;
+            $product = $products->get($item['product_id']);
             if (!$product) continue;
 
-            $unitPrice = $product['price'];
-            $lineTotal = $unitPrice * $item['quantity'];
-            $subtotal += $lineTotal;
-
+            $lineTotal  = $product->price * $item['quantity'];
+            $subtotal  += $lineTotal;
             $orderItems[] = [
-                'product_name' => $product['name'],
-                'quantity' => $item['quantity'],
-                'unit_price' => $unitPrice,
-                'original_price' => $product['original_price'],
-                'line_total' => $lineTotal,
+                'product_id'     => $product->id,
+                'product_name'   => $product->name,
+                'quantity'       => $item['quantity'],
+                'unit_price'     => $product->price,
+                'original_price' => $product->original_price,
+                'line_total'     => $lineTotal,
             ];
         }
 
@@ -80,23 +99,22 @@ class AdminOrderController extends Controller
             return back()->withErrors(['items' => 'At least one valid product is required.']);
         }
 
-        $discount = 0;
-        $total = $subtotal - $discount + $deliveryCharge;
-
         $order = Order::create([
-            'name' => $validated['name'],
-            'phone' => $validated['phone'],
-            'email' => $validated['email'] ?? null,
-            'address' => $validated['address'],
-            'city' => $validated['city'],
+            'name'            => $validated['name'],
+            'phone'           => $validated['phone'],
+            'email'           => $validated['email'] ?? null,
+            'address'         => $validated['address'],
+            'city'            => $validated['city'],
             'delivery_charge' => $deliveryCharge,
-            'subtotal' => $subtotal,
-            'discount' => $discount,
-            'total' => $total,
-            'payment_method' => $validated['payment_method'],
-            'status' => 'pending',
-            'coupon_code' => $validated['coupon_code'] ?? null,
-            'notes' => $validated['notes'] ?? null,
+            'subtotal'        => $subtotal,
+            'discount'        => 0,
+            'total'           => $subtotal + $deliveryCharge,
+            'payment_method'  => $validated['payment_method'],
+            'payment_number'  => $validated['payment_number'] ?? null,
+            'transaction_id'  => $validated['transaction_id'] ?? null,
+            'status'          => 'pending',
+            'coupon_code'     => $validated['coupon_code'] ?? null,
+            'notes'           => $validated['notes'] ?? null,
         ]);
 
         foreach ($orderItems as $itemData) {
@@ -116,29 +134,57 @@ class AdminOrderController extends Controller
     public function edit(Order $order)
     {
         $order->load('items');
-        $products = config('products');
-        return view('admin.ecommerce.order-edit', compact('order', 'products'));
+        $products        = Product::active()->orderBy('sort_order')->get(['id', 'name', 'price', 'original_price', 'slug'])->keyBy('id');
+        $deliveryCharges = DeliveryCharge::active()->orderBy('sort_order')->get();
+        $paymentMethods  = PaymentMethod::active()->orderBy('sort_order')->get();
+        return view('admin.ecommerce.order-edit', compact('order', 'products', 'deliveryCharges', 'paymentMethods'));
     }
 
     public function update(Request $request, Order $order)
     {
+        $deliveryCharges   = DeliveryCharge::active()->get()->keyBy('area_key');
+        $activeAreaKeys    = array_unique(array_merge($deliveryCharges->keys()->toArray(), [$order->city]));
+        $activePaymentKeys = array_unique(array_merge(PaymentMethod::active()->pluck('key')->toArray(), [$order->payment_method]));
+
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'address' => 'required|string',
-            'city' => 'required|string|in:dhaka,chittagong,outside',
-            'payment_method' => 'required|string|in:cod,bkash,nagad',
-            'status' => 'required|string|in:pending,processing,shipped,delivered,cancelled',
-            'coupon_code' => 'nullable|string|max:50',
-            'notes' => 'nullable|string|max:500',
+            'name'           => 'required|string|max:255',
+            'phone'          => 'required|string|max:20',
+            'email'          => 'nullable|email|max:255',
+            'address'        => 'required|string',
+            'city'           => 'required|string|in:' . implode(',', $activeAreaKeys),
+            'payment_method' => 'required|string|in:' . implode(',', $activePaymentKeys),
+            'payment_number' => 'nullable|string|max:50',
+            'transaction_id' => 'nullable|string|max:100',
+            'status'         => 'required|string|in:pending,processing,shipped,delivered,cancelled',
+            'coupon_code'    => 'nullable|string|max:50',
+            'notes'          => 'nullable|string|max:500',
         ]);
 
-        $deliveryCharge = in_array($validated['city'], ['dhaka', 'chittagong']) ? 60 : 120;
+        // Require transaction fields if the method needs them
+        $selectedMethod = PaymentMethod::where('key', $validated['payment_method'])->first();
+        if ($selectedMethod && $selectedMethod->requires_transaction) {
+            $request->validate([
+                'payment_number' => 'required|string|max:50',
+                'transaction_id' => 'required|string|max:100',
+            ]);
+        }
 
-        $order->update(array_merge($validated, [
+        $deliveryCharge = $deliveryCharges->get($validated['city'])?->charge ?? $order->delivery_charge;
+
+        $order->update([
+            'name'            => $validated['name'],
+            'phone'           => $validated['phone'],
+            'email'           => $validated['email'] ?? null,
+            'address'         => $validated['address'],
+            'city'            => $validated['city'],
             'delivery_charge' => $deliveryCharge,
-        ]));
+            'payment_method'  => $validated['payment_method'],
+            'payment_number'  => $validated['payment_number'] ?? null,
+            'transaction_id'  => $validated['transaction_id'] ?? null,
+            'status'          => $validated['status'],
+            'coupon_code'     => $validated['coupon_code'] ?? null,
+            'notes'           => $validated['notes'] ?? null,
+        ]);
 
         return redirect()->route('admin.ecommerce.orders')
             ->with('success', 'Order updated successfully.');

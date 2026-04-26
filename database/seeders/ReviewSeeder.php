@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Database\Seeder;
 
@@ -9,8 +10,16 @@ class ReviewSeeder extends Seeder
 {
     public function run(): void
     {
+        // Resolve product IDs by slug so reviews can be product-linked
+        $products = Product::pluck('id', 'slug');
+        $green  = $products['green-tea']   ?? null;
+        $black  = $products['black-tea']   ?? null;
+        $floral = $products['floral-tea']  ?? null;
+        $combo  = $products['combo-pack']  ?? null;
+
         $reviews = [
             [
+                'product_id' => $green,
                 'name' => 'রহিম আহমেদ',
                 'location' => 'ঢাকা',
                 'initial' => 'রহ',
@@ -19,6 +28,7 @@ class ReviewSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'product_id' => $green,
                 'name' => 'ফারহানা খান',
                 'location' => 'চট্টগ্রাম',
                 'initial' => 'ফা',
@@ -27,6 +37,7 @@ class ReviewSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'product_id' => $black,
                 'name' => 'কামাল হোসেন',
                 'location' => 'সিলেট',
                 'initial' => 'কা',
@@ -35,6 +46,7 @@ class ReviewSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'product_id' => $floral,
                 'name' => 'নাসরিন আক্তার',
                 'location' => 'রাজশাহী',
                 'initial' => 'না',
@@ -43,6 +55,7 @@ class ReviewSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'product_id' => $combo,
                 'name' => 'জাহিদ হাসান',
                 'location' => 'খুলনা',
                 'initial' => 'জা',
@@ -51,6 +64,7 @@ class ReviewSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'product_id' => $black,
                 'name' => 'সালমা বেগম',
                 'location' => 'চট্টগ্রাম',
                 'initial' => 'সা',
@@ -59,6 +73,7 @@ class ReviewSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'product_id' => $combo,
                 'name' => 'তানভীর রহমান',
                 'location' => 'ঢাকা',
                 'initial' => 'তা',
@@ -67,6 +82,7 @@ class ReviewSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'product_id' => $green,
                 'name' => 'মাহমুদা ইসলাম',
                 'location' => 'বরিশাল',
                 'initial' => 'মা',
@@ -75,6 +91,7 @@ class ReviewSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'product_id' => $black,
                 'name' => 'আরিফুল ইসলাম',
                 'location' => 'সিলেট',
                 'initial' => 'আ',
@@ -83,6 +100,7 @@ class ReviewSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'product_id' => $floral,
                 'name' => 'রুমানা পারভীন',
                 'location' => 'ঢাকা',
                 'initial' => 'রু',
@@ -91,6 +109,7 @@ class ReviewSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'product_id' => null,
                 'name' => 'সোহেল রানা',
                 'location' => 'কক্সবাজার',
                 'initial' => 'সো',
@@ -99,6 +118,7 @@ class ReviewSeeder extends Seeder
                 'status' => true,
             ],
             [
+                'product_id' => $combo,
                 'name' => 'তাসনিম জাহান',
                 'location' => 'রংপুর',
                 'initial' => 'তা',
