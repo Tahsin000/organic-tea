@@ -18,15 +18,34 @@
         .totals { padding: 12px 32px 24px; }
         .totals table td { border: none; padding: 4px 0; }
         .totals .grand-total { font-size: 18px; font-weight: 700; color: #059669; padding-top: 8px; border-top: 2px solid #e5e7eb; }
-        .meta { display: flex; flex-wrap: wrap; gap: 24px; }
-        .meta div { flex: 1; min-width: 200px; }
-        .meta p { margin: 4px 0; font-size: 14px; }
-        .meta strong { color: #374151; }
+        .info-list p { margin: 6px 0; font-size: 14px; overflow-wrap: anywhere; word-break: break-word; line-height: 1.5; }
+        .info-list strong { color: #374151; }
+        .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .order-table { min-width: 520px; }
         .footer { background: #f9fafb; padding: 16px 32px; text-align: center; font-size: 12px; color: #9ca3af; }
         .badge { display: inline-block; background: #fef3c7; color: #92400e; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+
+        @media (max-width: 640px) {
+            body { padding: 10px; }
+            .header, .section, .totals, .footer { padding-left: 16px; padding-right: 16px; }
+            .info-list p { margin: 8px 0; }
+            th, td { white-space: nowrap; }
+        }
     </style>
 </head>
 <body>
+    @php
+        $originalSubtotal = $items->sum(function ($item) {
+            $original = (float) ($item->original_price ?: $item->unit_price);
+            $unit = (float) $item->unit_price;
+            return max($original, $unit) * (int) $item->quantity;
+        });
+        $productSavings = max(0, $originalSubtotal - (float) $order->subtotal);
+        $productSavingsPercent = $originalSubtotal > 0
+            ? (int) round(($productSavings / $originalSubtotal) * 100)
+            : 0;
+    @endphp
+
     <div class="wrapper">
         <div class="header">
             <h1>New Order #{{ $order->id }}</h1>
@@ -35,56 +54,68 @@
 
         <div class="section">
             <h2>Customer Information</h2>
-            <div class="meta">
-                <div>
-                    <p><strong>Name:</strong> {{ $order->name }}</p>
-                    <p><strong>Phone:</strong> {{ $order->phone }}</p>
-                    @if($order->email)
-                        <p><strong>Email:</strong> {{ $order->email }}</p>
-                    @endif
-                </div>
-                <div>
-                    <p><strong>Address:</strong> {{ $order->address }}</p>
-                    <p><strong>City:</strong> {{ ucfirst($order->city) }}</p>
-                    <p><strong>Payment:</strong> {{ strtoupper($order->payment_method) }}</p>
-                    <p><strong>Status:</strong> <span class="badge">{{ ucfirst($order->status) }}</span></p>
-                </div>
+            <div class="info-list">
+                <p><strong>Name:</strong> {{ $order->name }}</p>
+                <p><strong>Phone:</strong> {{ $order->phone }}</p>
+                @if($order->email)
+                    <p><strong>Email:</strong> {{ $order->email }}</p>
+                @endif
+                <p><strong>Address:</strong> {{ $order->address }}</p>
+                <p><strong>City:</strong> {{ ucfirst($order->city) }}</p>
+                <p><strong>Payment:</strong> {{ strtoupper($order->payment_method) }}</p>
+                <p><strong>Status:</strong> <span class="badge">{{ ucfirst($order->status) }}</span></p>
             </div>
             @if($order->notes)
-                <p style="margin-top:12px;"><strong>Notes:</strong> {{ $order->notes }}</p>
+                <p style="margin-top:12px; overflow-wrap:anywhere; word-break:break-word;"><strong>Notes:</strong> {{ $order->notes }}</p>
             @endif
         </div>
 
         <div class="section">
             <h2>Order Items</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th style="text-align:center;">Qty</th>
-                        <th style="text-align:right;">Unit Price</th>
-                        <th style="text-align:right;">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($items as $item)
-                    <tr>
-                        <td>{{ $item->product_name }}</td>
-                        <td style="text-align:center;">{{ $item->quantity }}</td>
-                        <td style="text-align:right;">৳{{ number_format($item->unit_price, 2) }}</td>
-                        <td style="text-align:right;">৳{{ number_format($item->line_total, 2) }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            <div class="table-wrap">
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th style="text-align:center;">Qty</th>
+                            <th style="text-align:right;">Unit Price</th>
+                            <th style="text-align:right;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($items as $item)
+                        <tr>
+                            <td style="overflow-wrap:anywhere; word-break:break-word; white-space:normal;">{{ $item->product_name }}</td>
+                            <td style="text-align:center;">{{ $item->quantity }}</td>
+                            <td style="text-align:right;">&#2547;{{ number_format($item->unit_price, 2) }}</td>
+                            <td style="text-align:right;">&#2547;{{ number_format($item->line_total, 2) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="totals">
             <table>
-                <tr><td style="width:60%;">Subtotal</td><td style="text-align:right;">৳{{ number_format($order->subtotal, 2) }}</td></tr>
-                <tr><td>Discount (20%)</td><td style="text-align:right;color:#dc2626;">-৳{{ number_format($order->discount, 2) }}</td></tr>
-                <tr><td>Delivery Charge</td><td style="text-align:right;">৳{{ number_format($order->delivery_charge, 2) }}</td></tr>
-                <tr class="grand-total"><td>Total</td><td style="text-align:right;">৳{{ number_format($order->total, 2) }}</td></tr>
+                <tr>
+                    <td style="width:60%;">Subtotal</td>
+                    <td style="text-align:right;">&#2547;{{ number_format($order->subtotal, 2) }}</td>
+                </tr>
+                @if($productSavings > 0)
+                    <tr>
+                        <td>Product Savings{{ $productSavingsPercent > 0 ? ' (' . $productSavingsPercent . '%)' : '' }}</td>
+                        <td style="text-align:right; color:#059669;">&#2547;{{ number_format($productSavings, 2) }}</td>
+                    </tr>
+                @endif
+                <tr>
+                    <td>Delivery Charge</td>
+                    <td style="text-align:right;">&#2547;{{ number_format($order->delivery_charge, 2) }}</td>
+                </tr>
+                <tr class="grand-total">
+                    <td>Total</td>
+                    <td style="text-align:right;">&#2547;{{ number_format($order->total, 2) }}</td>
+                </tr>
             </table>
         </div>
 

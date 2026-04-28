@@ -65,7 +65,7 @@
                                         <option value="">Select area</option>
                                         @foreach($deliveryCharges as $dc)
                                         <option value="{{ $dc->area_key }}" {{ old('city', $order->city) === $dc->area_key ? 'selected' : '' }}>
-                                            {{ $dc->area_name }} (৳{{ number_format($dc->charge, 0) }})
+                                            {{ $dc->area_name }} (&#2547;{{ number_format($dc->charge, 0) }})
                                         </option>
                                         @endforeach
                                         {{-- Keep saved value if no longer active --}}
@@ -184,9 +184,9 @@
                                 @foreach($order->items as $item)
                                 <tr>
                                     <td>{{ $item->product_name }}</td>
-                                    <td>৳{{ number_format($item->unit_price, 2) }}</td>
+                                    <td>&#2547;{{ number_format($item->unit_price, 2) }}</td>
                                     <td>{{ $item->quantity }}</td>
-                                    <td class="text-end fw-semibold">৳{{ number_format($item->line_total, 2) }}</td>
+                                    <td class="text-end fw-semibold">&#2547;{{ number_format($item->line_total, 2) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -201,23 +201,36 @@
             <!-- Summary -->
             <div class="card">
                 <div class="card-body">
+                    @php
+                        $originalTotal = $order->items->sum(function ($item) {
+                            $original = (float) ($item->original_price ?: $item->unit_price);
+                            $unit = (float) $item->unit_price;
+                            return max($original, $unit) * (int) $item->quantity;
+                        });
+                        $productSavings = max(0, $originalTotal - (float) $order->subtotal);
+                        $productSavingsPercent = $originalTotal > 0
+                            ? (int) round(($productSavings / $originalTotal) * 100)
+                            : 0;
+                    @endphp
                     <h5 class="card-title mb-3">Summary</h5>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Subtotal</span>
-                        <span>৳{{ number_format($order->subtotal, 2) }}</span>
+                        <span>&#2547;{{ number_format($order->subtotal, 2) }}</span>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">Discount</span>
-                        <span class="text-success">- ৳{{ number_format($order->discount, 2) }}</span>
-                    </div>
+                    @if($productSavings > 0)
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Product Savings{{ $productSavingsPercent > 0 ? ' (' . $productSavingsPercent . '%)' : '' }}</span>
+                            <span class="text-success">&#2547;{{ number_format($productSavings, 2) }}</span>
+                        </div>
+                    @endif
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Delivery</span>
-                        <span>৳{{ number_format($order->delivery_charge, 2) }}</span>
+                        <span>&#2547;{{ number_format($order->delivery_charge, 2) }}</span>
                     </div>
                     <hr />
                     <div class="d-flex justify-content-between">
                         <span class="fw-bold fs-5">Total</span>
-                        <span class="fw-bold fs-5 text-primary">৳{{ number_format($order->total, 2) }}</span>
+                        <span class="fw-bold fs-5 text-primary">&#2547;{{ number_format($order->total, 2) }}</span>
                     </div>
                 </div>
             </div>

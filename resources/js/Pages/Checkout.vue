@@ -226,9 +226,9 @@
                                     <span>সাবটোটাল</span>
                                     <span>{{ formatBangla(subtotal) }}৳</span>
                                 </div>
-                                <div class="flex justify-between text-sm text-green-600 font-medium">
-                                    <span>প্রথম অর্ডার ছাড় (২০%)</span>
-                                    <span>-{{ formatBangla(discount) }}৳</span>
+                                <div v-if="savings > 0" class="flex justify-between text-sm text-green-600 font-medium">
+                                    <span>Product savings</span>
+                                    <span>{{ formatBangla(savings) }}৳</span>
                                 </div>
                                 <div class="flex justify-between text-sm text-gray-600">
                                     <span>ডেলিভারি চার্জ</span>
@@ -270,9 +270,9 @@
                                 <span>সাবটোটাল</span>
                                 <span>{{ formatBangla(subtotal) }}৳</span>
                             </div>
-                            <div class="flex justify-between text-sm text-green-600 font-medium">
-                                <span>প্রথম অর্ডার ছাড় (২০%)</span>
-                                <span>-{{ formatBangla(discount) }}৳</span>
+                            <div v-if="savings > 0" class="flex justify-between text-sm text-green-600 font-medium">
+                                <span>Product savings</span>
+                                <span>{{ formatBangla(savings) }}৳</span>
                             </div>
                             <div class="flex justify-between text-sm text-gray-600">
                                 <span>ডেলিভারি চার্জ</span>
@@ -285,9 +285,9 @@
                         </div>
 
                         <!-- Savings badge -->
-                        <div v-if="discount > 0" class="mt-4 bg-green-50 border border-green-200 rounded-lg p-3 text-center">
+                        <div v-if="savings > 0" class="mt-4 bg-green-50 border border-green-200 rounded-lg p-3 text-center">
                             <p class="text-sm text-green-700 font-medium">
-                                আপনি সাশ্রয় করছেন <strong>{{ formatBangla(discount) }}৳</strong>!
+                                আপনি সাশ্রয় করছেন <strong>{{ formatBangla(savings) }}৳</strong>!
                             </p>
                         </div>
 
@@ -297,10 +297,7 @@
                                 <ShieldCheckIcon class="w-4 h-4 text-green-600" />
                                 <span>নিরাপদ চেকআউট</span>
                             </div>
-                            <div class="flex items-center gap-2 text-sm text-gray-600">
-                                <ArrowPathIcon class="w-4 h-4 text-green-600" />
-                                <span>৭ দিনের রিটার্ন পলিসি</span>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -391,11 +388,16 @@ function formatBangla(n) {
 }
 
 const subtotal = computed(() => selectedProducts.value.reduce((sum, item) => sum + item.price * item.quantity, 0));
-const discount = computed(() => Math.round(subtotal.value * 0.20));
+const savings = computed(() => selectedProducts.value.reduce((sum, item) => {
+    const original = Number(item.original_price ?? item.price);
+    const current = Number(item.price);
+    const perUnitSaving = Math.max(0, original - current);
+    return sum + (perUnitSaving * item.quantity);
+}, 0));
 const selectedArea = computed(() => deliveryChargesList.value.find(d => d.key === form.city) ?? null);
 const deliveryCharge = computed(() => selectedArea.value ? selectedArea.value.charge : 0);
 const selectedMethod = computed(() => paymentMethodsList.value.find(m => m.id === form.payment_method) ?? null);
-const total = computed(() => subtotal.value - discount.value + (form.city ? deliveryCharge.value : 0));
+const total = computed(() => subtotal.value + (form.city ? deliveryCharge.value : 0));
 
 function submitOrder() {
     // Validate transaction fields if required

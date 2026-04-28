@@ -61,7 +61,6 @@ class OrderController extends Controller
             'items'            => 'required|array|min:1',
             'items.*.product_id' => 'required',
             'items.*.quantity'   => 'required|integer|min:1',
-            'items.*.unit_price' => 'required|numeric|min:0',
             'coupon_code'      => 'nullable|string|max:50',
             'notes'            => 'nullable|string|max:500',
         ]);
@@ -77,11 +76,46 @@ class OrderController extends Controller
 
         $deliveryCharge = $deliveryCharges->get($validated['city'])?->charge ?? 0;
 
-        $subtotal = collect($validated['items'])->sum(fn ($item) => $item['unit_price'] * $item['quantity']);
+        $rawProductIds = collect($validated['items'])->pluck('product_id')->all();
+        $productsById = Product::active()->whereIn('id', $rawProductIds)->get()->keyBy('id');
+        $productsBySlug = Product::active()->whereIn('slug', $rawProductIds)->get()->keyBy('slug');
 
-        // First order 20% discount
-        $discount = $subtotal * 0.20;
-        $total    = $subtotal - $discount + $deliveryCharge;
+        $orderItems = [];
+        $subtotal = 0;
+        $savings = 0;
+
+        foreach ($validated['items'] as $item) {
+            $product = $productsById->get($item['product_id'])
+                ?? $productsBySlug->get($item['product_id'])
+                ?? null;
+
+            if (!$product) {
+                continue;
+            }
+
+            $quantity = (int) $item['quantity'];
+            $unitPrice = (float) $product->price;
+            $originalPrice = (float) ($product->original_price ?: $product->price);
+            $lineTotal = $unitPrice * $quantity;
+
+            $subtotal += $lineTotal;
+            $savings += max(0, $originalPrice - $unitPrice) * $quantity;
+
+            $orderItems[] = [
+                'product_id'     => $product->id,
+                'product_name'   => $product->name,
+                'quantity'       => $quantity,
+                'unit_price'     => $unitPrice,
+                'original_price' => $originalPrice,
+                'line_total'     => $lineTotal,
+            ];
+        }
+
+        if (empty($orderItems)) {
+            return back()->withErrors(['items' => 'At least one valid product is required.'])->withInput();
+        }
+
+        $total = $subtotal + $deliveryCharge;
 
         $order = Order::create([
             'name'             => $validated['name'],
@@ -91,7 +125,8 @@ class OrderController extends Controller
             'city'             => $validated['city'],
             'delivery_charge'  => $deliveryCharge,
             'subtotal'         => $subtotal,
-            'discount'         => $discount,
+            // Informational product savings (from original price), not deducted again from total.
+            'discount'         => $savings,
             'total'            => $total,
             'payment_method'   => $validated['payment_method'],
             'payment_number'   => $validated['payment_number'] ?? null,
@@ -101,24 +136,15 @@ class OrderController extends Controller
             'notes'            => $validated['notes'] ?? null,
         ]);
 
-        $products = Product::whereIn('id', collect($validated['items'])->pluck('product_id'))->get()->keyBy('id');
-        $productsBySlug = $products->isEmpty()
-            ? Product::whereIn('slug', collect($validated['items'])->pluck('product_id'))->get()->keyBy('slug')
-            : collect();
-
-        foreach ($validated['items'] as $item) {
-            $product = $products->get($item['product_id'])
-                ?? $productsBySlug->get($item['product_id'])
-                ?? null;
-
+        foreach ($orderItems as $item) {
             OrderItem::create([
                 'order_id'       => $order->id,
-                'product_id'     => $product?->id,
-                'product_name'   => $product ? $product->name : $item['product_id'],
+                'product_id'     => $item['product_id'],
+                'product_name'   => $item['product_name'],
                 'quantity'       => $item['quantity'],
                 'unit_price'     => $item['unit_price'],
-                'original_price' => $product ? $product->original_price : $item['unit_price'],
-                'line_total'     => $item['unit_price'] * $item['quantity'],
+                'original_price' => $item['original_price'],
+                'line_total'     => $item['line_total'],
             ]);
         }
 
