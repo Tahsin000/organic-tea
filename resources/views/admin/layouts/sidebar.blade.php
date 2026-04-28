@@ -78,7 +78,7 @@
                 <li class="side-nav-item">
                     <a href="{{ route('admin.ecommerce.orders') }}" class="side-nav-link {{ request()->routeIs('admin.ecommerce.orders') ? 'active' : '' }}">
                         <span class="menu-icon"><i class="ti ti-shopping-cart"></i></span>
-                        <span class="menu-text">Order Table</span>
+                        <span class="menu-text">Order</span>
                     </a>
                 </li>
 
