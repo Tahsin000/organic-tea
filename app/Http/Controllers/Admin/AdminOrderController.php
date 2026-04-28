@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use App\Models\DeliveryCharge;
 use App\Models\Order;
@@ -129,6 +130,18 @@ class AdminOrderController extends Controller
     {
         $order->load('items');
         return view('admin.ecommerce.order-show', compact('order'));
+    }
+
+    public function invoice(Order $order)
+    {
+        $order->load('items');
+
+        $pdf = Pdf::loadView('admin.ecommerce.orders.invoice', [
+            'order' => $order,
+            'appName' => config('app.name'),
+        ])->setPaper('a4');
+
+        return $pdf->download('invoice-order-' . $order->id . '.pdf');
     }
 
     public function edit(Order $order)

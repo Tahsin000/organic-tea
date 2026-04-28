@@ -104,9 +104,9 @@
                                 <a href="{{ route('admin.ecommerce.order-edit', $order) }}" class="btn btn-default btn-icon btn-sm" title="Edit" data-bs-toggle="tooltip" data-bs-placement="top">
                                     <i class="ti ti-edit fs-lg"></i>
                                 </a>
-                                <button type="button" class="btn btn-default btn-icon btn-sm delete-order-btn" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteOrderModal" data-order-id="{{ $order->id }}" data-order-name="{{ $order->name }}">
-                                    <i class="ti ti-trash fs-lg"></i>
-                                </button>
+                                {{-- <a href="{{ route('admin.ecommerce.order-invoice', $order) }}" class="btn btn-default btn-icon btn-sm" title="Invoice (PDF)" data-bs-toggle="tooltip" data-bs-placement="top">
+                                    <i class="ti ti-file-download fs-lg"></i>
+                                </a> --}}
                             </div>
                         </td>
                     </tr>
@@ -140,40 +140,4 @@
     </div>
 </div>
 
-<!-- Delete Order Modal -->
-<div class="modal fade" id="deleteOrderModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Delete Order</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p class="mb-0">Are you sure you want to delete order <strong id="delete-order-ref"></strong>? This action cannot be undone.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                <form id="delete-order-form" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm">
-                        <i class="ti ti-trash me-1"></i> Delete
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
-
-@push('scripts')
-<script>
-document.getElementById('deleteOrderModal').addEventListener('show.bs.modal', function (e) {
-    var button = e.relatedTarget;
-    var orderId = button.getAttribute('data-order-id');
-    var orderName = button.getAttribute('data-order-name');
-    document.getElementById('delete-order-ref').textContent = '#' + orderId + ' - ' + orderName;
-    document.getElementById('delete-order-form').action = '/admin/ecommerce/orders/' + orderId;
-});
-</script>
-@endpush

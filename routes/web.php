@@ -88,6 +88,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
         Route::get('/orders/create',     [AdminOrderController::class, 'create'])->name('order-create');
         Route::post('/orders',           [AdminOrderController::class, 'store'])->name('order-store');
         Route::get('/orders/{order}',    [AdminOrderController::class, 'show'])->name('order-show');
+        Route::get('/orders/{order}/invoice', [AdminOrderController::class, 'invoice'])->name('order-invoice');
         Route::get('/orders/{order}/edit', [AdminOrderController::class, 'edit'])->name('order-edit');
         Route::put('/orders/{order}',    [AdminOrderController::class, 'update'])->name('order-update');
         Route::delete('/orders/{order}', [AdminOrderController::class, 'destroy'])->name('order-delete');
