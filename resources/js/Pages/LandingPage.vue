@@ -1,8 +1,8 @@
 <template>
     <Head title="অর্গানিক - প্রাকৃতিক চা" />
-    <div class="min-h-screen">
+    <div class="min-h-screen" :key="$page.url">
         <StickyRibbon :content="site.ribbon" />
-        <HeroSection v-if="site.hero" :products="products" :hero-product="heroProduct" :content="site.hero" @go-product="goToProduct" />
+        <HeroSection :highlighted-products="highlightedProducts" :content="site.hero || {}" />
         <ProductOverview v-if="Object.keys(products).length" :products="products" :content="site.product_overview || {}" />
         <OfferSection v-if="site.offer" :content="site.offer" />
         <ProductGallery v-if="site.product_gallery" :content="site.product_gallery" />
@@ -27,7 +27,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { Head, router, usePage } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import StickyRibbon from '../Components/Landing/StickyRibbon.vue';
 import HeroSection from '../Components/Landing/HeroSection.vue';
 import ProductOverview from '../Components/Landing/ProductOverview.vue';
@@ -39,7 +39,7 @@ import FooterSection from '../Components/Landing/FooterSection.vue';
 
 defineProps({
     products: { type: Object, default: () => ({}) },
-    heroProduct: { type: Object, default: () => null },
+    highlightedProducts: { type: Array, default: () => [] },
     reviews: { type: Array, default: () => [] },
     site: { type: Object, default: () => ({}) },
 });
@@ -57,8 +57,4 @@ onMounted(() => {
         setTimeout(() => { showToast.value = false; }, 4000);
     }
 });
-
-function goToProduct(id) {
-    router.visit(`/product/${id}`);
-}
 </script>

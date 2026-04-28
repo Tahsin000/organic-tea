@@ -3,9 +3,9 @@
     <div class="min-h-screen bg-gray-50">
         <StickyRibbon />
 
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 mt-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 lg:py-16 mt-10 sm:mt-12">
             <!-- Back link -->
-            <a href="/" class="inline-flex items-center gap-2 text-gray-600 hover:text-green-600 transition-colors mb-4 sm:mb-6">
+            <a href="/" class="inline-flex items-center gap-2 text-sm sm:text-base text-gray-600 hover:text-green-600 transition-colors mb-4 sm:mb-6">
                 <ArrowLeftIcon class="w-4 h-4" />
                 হোমে ফিরুন
             </a>
@@ -13,7 +13,7 @@
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">চেকআউট</h1>
 
             <!-- Steps indicator -->
-            <div class="flex items-center justify-center mb-8 sm:mb-10">
+            <div class="flex items-center justify-between sm:justify-center mb-6 sm:mb-10 gap-1 sm:gap-0">
                 <div v-for="(step, i) in steps" :key="i" class="flex items-center">
                     <div :class="`flex items-center gap-2 ${i + 1 <= currentStep ? 'text-green-600' : 'text-gray-400'}`">
                         <div :class="`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-all ${i + 1 < currentStep ? 'bg-green-600 text-white' : i + 1 === currentStep ? 'bg-green-100 text-green-700 ring-2 ring-green-600' : 'bg-gray-200 text-gray-500'}`">
@@ -38,12 +38,12 @@
 
                         <div class="space-y-3 sm:space-y-4 mb-6">
                             <div v-for="p in allProducts" :key="p.id"
-                                 :class="`flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all cursor-pointer hover:border-green-300 ${selectedProducts.find(s => s.id === p.id) ? 'border-green-600 bg-green-50' : 'border-gray-200'}`"
+                                 :class="`flex flex-wrap sm:flex-nowrap items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all cursor-pointer hover:border-green-300 ${selectedProducts.find(s => s.id === p.id) ? 'border-green-600 bg-green-50' : 'border-gray-200'}`"
                                  @click="toggleProduct(p)">
                                 <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-lg overflow-hidden flex-shrink-0 bg-green-100">
                                     <img :src="p.image" :alt="p.name" class="w-full h-full object-cover" />
                                 </div>
-                                <div class="flex-1 min-w-0">
+                                <div class="flex-1 min-w-0 pt-0.5">
                                     <h4 class="font-bold text-gray-900 text-sm sm:text-base truncate">{{ p.name }}</h4>
                                     <div class="flex items-baseline gap-1.5 sm:gap-2">
                                         <span class="text-green-600 font-bold text-sm sm:text-base">{{ formatBangla(p.price) }}৳</span>
@@ -51,14 +51,14 @@
                                     </div>
                                 </div>
                                 <!-- Qty controls (only if selected) -->
-                                <div v-if="selectedProducts.find(s => s.id === p.id)" class="flex items-center gap-1.5 sm:gap-2">
+                                <div v-if="selectedProducts.find(s => s.id === p.id)" class="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto pl-[3.75rem] sm:pl-0">
                                     <button @click.stop="updateItemQty(p.id, -1)"
                                             class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg border-2 border-gray-200 hover:border-green-600 transition-colors flex items-center justify-center text-base sm:text-lg font-bold">-</button>
                                     <span class="w-7 sm:w-8 text-center font-bold text-sm">{{ selectedProducts.find(s => s.id === p.id)?.quantity }}</span>
                                     <button @click.stop="updateItemQty(p.id, 1)"
                                             class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg border-2 border-gray-200 hover:border-green-600 transition-colors flex items-center justify-center text-base sm:text-lg font-bold">+</button>
                                 </div>
-                                <div v-else class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                                <div v-else class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-gray-300 flex items-center justify-center self-center sm:self-auto">
                                     <PlusIcon class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" />
                                 </div>
                             </div>
@@ -119,9 +119,9 @@
                                 <textarea v-model="form.notes" rows="2" placeholder="কোনো বিশেষ অনুরোধ থাকলে লিখুন"
                                           class="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors resize-none text-sm sm:text-base"></textarea>
                             </div>
-                            <div class="flex gap-2 sm:gap-3">
+                            <div class="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3">
                                 <button type="button" @click="currentStep = 1"
-                                        class="px-4 sm:px-6 py-2.5 sm:py-4 rounded-xl border-2 border-gray-200 text-gray-600 hover:border-green-600 hover:text-green-600 font-bold text-sm sm:text-base transition-colors">
+                                        class="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-4 rounded-xl border-2 border-gray-200 text-gray-600 hover:border-green-600 hover:text-green-600 font-bold text-sm sm:text-base transition-colors">
                                     পূর্ববর্তী
                                 </button>
                                 <button type="submit"
@@ -144,7 +144,7 @@
                         <div class="space-y-3 mb-6">
                             <h3 class="text-sm font-medium text-gray-700 mb-3">পেমেন্ট পদ্ধতি নির্বাচন করুন</h3>
                             <label v-for="method in paymentMethodsList" :key="method.id"
-                                   :class="`flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 cursor-pointer transition-all ${form.payment_method === method.id ? 'border-green-600 bg-green-50' : 'border-gray-200 hover:border-green-300'}`">
+                                   :class="`flex items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 cursor-pointer transition-all ${form.payment_method === method.id ? 'border-green-600 bg-green-50' : 'border-gray-200 hover:border-green-300'}`">
                                 <input type="radio" v-model="form.payment_method" :value="method.id" class="sr-only" />
                                 <div :class="`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${form.payment_method === method.id ? 'bg-green-600' : 'bg-gray-100'}`">
                                     <component :is="getMethodIcon(method.id)" :class="`w-4 h-4 sm:w-5 sm:h-5 ${form.payment_method === method.id ? 'text-white' : 'text-gray-500'}`" />
@@ -188,9 +188,9 @@
                             </p>
                         </div>
 
-                        <div class="flex gap-2 sm:gap-3">
+                        <div class="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3">
                             <button type="button" @click="currentStep = 2"
-                                    class="px-4 sm:px-6 py-2.5 sm:py-4 rounded-xl border-2 border-gray-200 text-gray-600 hover:border-green-600 hover:text-green-600 font-bold text-sm sm:text-base transition-colors">
+                                    class="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-4 rounded-xl border-2 border-gray-200 text-gray-600 hover:border-green-600 hover:text-green-600 font-bold text-sm sm:text-base transition-colors">
                                 পূর্ববর্তী
                             </button>
                             <button @click="submitOrder"

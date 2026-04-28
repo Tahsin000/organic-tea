@@ -41,7 +41,7 @@ use App\Http\Controllers\Admin\ErrorController;
 Route::get('/', [LandingPageController::class, 'index'])->name('landing');
 
 // Product page route
-Route::get('/product/{productId}', [LandingPageController::class, 'product'])->name('product');
+Route::get('/product/{productSlug}', [LandingPageController::class, 'product'])->name('product');
 
 // Checkout routes
 Route::get('/checkout', [OrderController::class, 'create'])->name('checkout');

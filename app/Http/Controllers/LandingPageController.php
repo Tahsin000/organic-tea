@@ -13,6 +13,8 @@ use Inertia\Inertia;
 
 class LandingPageController extends Controller
 {
+    private const ACTIVE_PRODUCTS_CACHE_KEY = 'active_products_v2';
+
     public function index()
     {
         $reviews = Review::active()
@@ -27,9 +29,7 @@ class LandingPageController extends Controller
                 'stars'    => $r->stars,
             ]);
 
-        $siteSettings = Cache::remember('site_settings', now()->addHours(24), function () {
-            return User::getSiteSettings();
-        });
+        $siteSettings = $this->getSiteSettings();
 
         $activeSettings = [];
         foreach ($siteSettings as $key => $section) {
@@ -47,51 +47,56 @@ class LandingPageController extends Controller
             }
         }
 
-        $products = Cache::remember('active_products', now()->addHours(6), function () {
-            return Product::active()
-                ->with(['images', 'tags'])
-                ->orderBy('sort_order')
-                ->get()
-                ->keyBy('slug')
-                ->map(fn ($p) => $p->toFrontendArray());
-        });
+        $products = $this->getActiveProducts();
 
-        // Pass highlighted product separately for the hero section
-        $heroProduct = collect($products)->first(fn ($p) => $p['highlight'] ?? false);
+        // Pass all highlighted products for the hero section slider
+        $highlightedProducts = array_values(array_filter(
+            $products,
+            fn (array $product) => (bool) ($product['highlight'] ?? false)
+        ));
 
         return Inertia::render('LandingPage', [
-            'products'    => $products,
-            'heroProduct' => $heroProduct,
-            'reviews'     => $reviews,
-            'site'        => $activeSettings,
+            'products'          => $products,
+            'highlightedProducts' => $highlightedProducts,
+            'reviews'           => $reviews,
+            'site'              => $activeSettings,
         ]);
     }
 
     public function product(Request $request)
     {
-        $slug    = $request->route('productId'); // route param kept as productId for compatibility
+        $slug    = $request->route('productSlug');
         $product = Product::active()
             ->with(['images', 'tags'])
             ->where('slug', $slug)
             ->firstOrFail();
 
-        $allProducts = Cache::remember('active_products', now()->addHours(6), function () {
-            return Product::active()
-                ->with(['images', 'tags'])
-                ->orderBy('sort_order')
-                ->get()
-                ->keyBy('slug')
-                ->map(fn ($p) => $p->toFrontendArray());
-        });
-
-        $siteSettings = Cache::remember('site_settings', now()->addHours(24), function () {
-            return User::getSiteSettings();
-        });
+        $allProducts = $this->getActiveProducts();
+        $siteSettings = $this->getSiteSettings();
 
         return Inertia::render('ProductDetail', [
             'product'  => $product->toFrontendArray(),
             'products' => $allProducts,
             'site'     => $siteSettings,
         ]);
+    }
+
+    private function getSiteSettings(): array
+    {
+        return Cache::remember('site_settings', now()->addHours(24), function (): array {
+            return User::getSiteSettings();
+        });
+    }
+
+    private function getActiveProducts(): array
+    {
+        return Cache::remember(self::ACTIVE_PRODUCTS_CACHE_KEY, now()->addHours(6), function (): array {
+            return Product::active()
+                ->with(['images', 'tags'])
+                ->orderBy('sort_order')
+                ->get()
+                ->mapWithKeys(fn ($product) => [$product->slug => $product->toFrontendArray()])
+                ->all();
+        });
     }
 }

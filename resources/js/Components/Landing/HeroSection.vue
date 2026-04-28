@@ -10,7 +10,7 @@
             <!-- Mobile: tag centered, desktop: left-aligned -->
             <div class="text-center lg:text-right">
                 <span class="inline-flex items-center gap-2 bg-green-100 text-green-800 text-sm font-medium px-4 py-2 rounded-full mb-4 animate-fade-in-up">
-                    <LeafIcon class="w-4 h-4" />
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3c-1.5 0-2.8.4-3.9 1.1C5.3 6 4 9 4 12c0 5.5 3.8 8.5 8 8.5s8-3 8-8.5c0-3-1.3-6-4.1-7.9C14.8 3.4 13.5 3 12 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18"/></svg>
                     {{ c.badge }}
                 </span>
             </div>
@@ -28,10 +28,10 @@
                     <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start animate-fade-in-up mb-8" style="animation-delay: 0.4s">
                         <a href="#products" class="group bg-green-600 hover:bg-green-700 text-white text-base sm:text-lg font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
                             {{ c.cta_primary }}
-                            <ArrowDownIcon class="w-5 h-5 group-hover:translate-y-1 transition-transform" />
+                            <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
                         </a>
                         <a href="#offer" class="group bg-white hover:bg-gray-50 text-green-600 text-base sm:text-lg font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl border-2 border-green-600 hover:border-green-700 transition-all duration-300 flex items-center justify-center gap-2">
-                            <TagIcon class="w-5 h-5" />
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.149 3.66A2.25 2.25 0 009.568 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6l6 6"/></svg>
                             {{ c.cta_secondary }}
                         </a>
                     </div>
@@ -45,52 +45,45 @@
                     </div>
                 </div>
 
-                <!-- Right: Hero product visual -->
+                <!-- Right: Highlighted products slider -->
                 <div class="order-1 lg:order-2">
                     <div class="relative max-w-sm sm:max-w-md lg:max-w-lg mx-auto">
                         <!-- Glow ring -->
                         <div class="absolute inset-4 bg-green-300 rounded-full opacity-20 blur-2xl animate-pulse"></div>
 
-                        <!-- Hero product card (DB-driven) -->
-                        <div v-if="highlightedProduct"
-                             class="relative bg-white rounded-3xl shadow-2xl overflow-hidden border border-green-100 cursor-pointer group"
-                             @click="$emit('go-product', highlightedProduct.slug)">
+                        <!-- Slider card -->
+                        <div v-if="currentProduct"
+                             class="relative bg-white rounded-3xl shadow-2xl overflow-hidden border border-green-100 cursor-pointer group animate-fade-in-up"
+                             @click="goToProduct">
                             <!-- Product image -->
                             <div class="relative h-48 sm:h-56 lg:h-64 bg-gradient-to-br from-green-100 to-emerald-100 overflow-hidden">
-                                <img :src="highlightedProduct.image" :alt="highlightedProduct.name"
+                                <img :src="currentProduct.image" :alt="currentProduct.name"
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                                 <!-- Badge -->
-                                <span v-if="highlightedProduct.badge" class="absolute top-3 left-3 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1">
-                                    <TagIcon class="w-3 h-3" />
-                                    {{ highlightedProduct.badge }}
+                                <span v-if="currentProduct.badge" class="absolute top-3 left-3 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.149 3.66A2.25 2.25 0 009.568 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6l6 6"/></svg>
+                                    {{ currentProduct.badge }}
                                 </span>
                                 <!-- Price tag -->
                                 <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1.5">
-                                    <span class="text-lg font-bold text-green-600">{{ formatBangla(highlightedProduct.price) }}৳</span>
-                                    <span class="text-xs text-gray-400 line-through ml-1">{{ formatBangla(highlightedProduct.original_price) }}৳</span>
+                                    <span class="text-lg font-bold text-green-600">{{ formatBangla(currentProduct.price) }}৳</span>
+                                    <span class="text-xs text-gray-400 line-through ml-1">{{ formatBangla(currentProduct.original_price) }}৳</span>
                                 </div>
                             </div>
-                            <!-- Product name -->
+                            <!-- Product info -->
                             <div class="p-4">
-                                <h3 class="font-bold text-gray-900 text-base">{{ highlightedProduct.name }}</h3>
-                                <p class="text-gray-500 text-sm mt-1 truncate">{{ highlightedProduct.desc }}</p>
+                                <h3 class="font-bold text-gray-900 text-base">{{ currentProduct.name }}</h3>
+                                <p class="text-gray-500 text-sm mt-1 truncate">{{ currentProduct.desc }}</p>
                                 <span class="inline-block mt-2 text-xs text-green-600 font-semibold group-hover:underline">অর্ডার করুন →</span>
                             </div>
                         </div>
 
-                        <!-- Fallback placeholder when no product is highlighted -->
-                        <div v-else class="relative bg-white rounded-3xl shadow-2xl overflow-hidden border border-green-100">
-                            <!-- Quick category nav -->
-                            <div class="grid grid-cols-4 gap-2 p-4">
-                                <div v-for="cat in categories" :key="cat.id"
-                                     @click="$emit('go-product', cat.id)"
-                                     class="flex flex-col items-center gap-1 p-2 sm:p-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer group">
-                                    <div :class="`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform ${cat.bg}`">
-                                        <component :is="cat.icon" :class="`w-5 h-5 sm:w-6 sm:h-6 ${cat.color}`" />
-                                    </div>
-                                    <span class="text-[10px] sm:text-xs text-gray-600 font-medium text-center leading-tight">{{ cat.label }}</span>
-                                </div>
-                            </div>
+                        <!-- Slider dots -->
+                        <div v-if="slides.length > 1" class="flex items-center justify-center gap-2 mt-4">
+                            <button v-for="(_, i) in slides" :key="i"
+                                    @click.stop="currentSlide = i"
+                                    :class="['w-2.5 h-2.5 rounded-full transition-all duration-300', currentSlide === i ? 'bg-green-600 w-6' : 'bg-green-300 hover:bg-green-400']"
+                                    :aria-label="`Slide ${i + 1}`" />
                         </div>
                     </div>
                 </div>
@@ -107,67 +100,68 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { ArrowDownIcon, TagIcon } from '@heroicons/vue/24/outline';
-
-const LeafIcon = { template: `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3c-1.5 0-2.8.4-3.9 1.1C5.3 6 4 9 4 12c0 5.5 3.8 8.5 8 8.5s8-3 8-8.5c0-3-1.3-6-4.1-7.9C14.8 3.4 13.5 3 12 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18"/></svg>` };
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import { router } from '@inertiajs/vue3';
 
 const props = defineProps({
-    products: { type: Object, default: () => ({}) },
-    heroProduct: { type: Object, default: () => null },
+    highlightedProducts: { type: [Array, Object], default: () => [] },
     content: { type: Object, default: () => ({}) },
 });
 
 const c = computed(() => ({
-    badge: '১০% প্রাকৃতিক ও জৈব',
+    badge: '১০০% প্রাকৃতিক ও জৈব',
     title_1: 'সেরা মানের ',
     title_highlight: 'অর্গানিক চা',
     title_2: '<br class="hidden sm:block" /> আপনার দরজায়',
     description: 'সিলেটের পাহাড়ি বাগান থেকে সংগ্রহ করা বিশুদ্ধ জৈব চা পাতা। কোনো রাসায়নিক সার নেই, কোনো কৃত্রিম স্বাদ নেই - শুধু প্রকৃতির আসল স্বাদ।',
     cta_primary: 'পণ্য দেখুন',
     cta_secondary: 'অফার দেখুন',
-    stat1_value: '৫০০+',
-    stat1_label: 'সন্তুষ্ট গ্রাহক',
-    stat2_value: '৪.৮/৫',
-    stat2_label: 'গড় রেটিং',
-    stat3_value: '১০০০+',
-    stat3_label: 'অর্ডার সম্পন্ন',
+    stats: [
+        { value: '৫০০+', label: 'সন্তুষ্ট গ্রাহক' },
+        { value: '৪.৮/৫', label: 'গড় রেটিং' },
+        { value: '১০০০+', label: 'অর্ডার সম্পন্ন' },
+    ],
     ...props.content,
 }));
 
-// Use the explicitly highlighted product passed from the controller
-const highlightedProduct = computed(() => props.heroProduct ?? null);
+const currentSlide = ref(0);
+let autoAdvanceTimer = null;
 
-const categories = [
-    {
-        id: 'green-tea',
-        label: 'সবুজ চা',
-        bg: 'bg-green-50',
-        color: 'text-green-600',
-        icon: { template: `<svg class="w-full h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>` },
-    },
-    {
-        id: 'black-tea',
-        label: 'কালো চা',
-        bg: 'bg-amber-50',
-        color: 'text-amber-700',
-        icon: { template: `<svg class="w-full h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"/></svg>` },
-    },
-    {
-        id: 'floral-tea',
-        label: 'ফুলের চা',
-        bg: 'bg-pink-50',
-        color: 'text-pink-500',
-        icon: { template: `<svg class="w-full h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"/></svg>` },
-    },
-    {
-        id: 'combo-pack',
-        label: 'হার্বাল চা',
-        bg: 'bg-teal-50',
-        color: 'text-teal-600',
-        icon: { template: `<svg class="w-full h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/></svg>` },
-    },
-];
+const slides = computed(() => (
+    Array.isArray(props.highlightedProducts)
+        ? props.highlightedProducts
+        : Object.values(props.highlightedProducts || {})
+));
+
+const currentProduct = computed(() => slides.value[currentSlide.value] ?? null);
+
+function startAutoAdvance() {
+    stopAutoAdvance();
+    if (slides.value.length > 1) {
+        autoAdvanceTimer = setInterval(() => {
+            currentSlide.value = (currentSlide.value + 1) % slides.value.length;
+        }, 5000);
+    }
+}
+function stopAutoAdvance() { if (autoAdvanceTimer) { clearInterval(autoAdvanceTimer); autoAdvanceTimer = null; } }
+
+onMounted(() => {
+    currentSlide.value = 0;
+    startAutoAdvance();
+});
+
+onUnmounted(() => { stopAutoAdvance(); });
+
+watch(slides, () => {
+    currentSlide.value = 0;
+    startAutoAdvance();
+}, { deep: true });
+
+function goToProduct() {
+    if (currentProduct.value?.slug) {
+        router.visit(`/product/${currentProduct.value.slug}`);
+    }
+}
 
 function formatBangla(n) {
     const b = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];

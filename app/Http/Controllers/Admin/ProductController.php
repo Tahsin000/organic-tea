@@ -211,13 +211,7 @@ class ProductController extends Controller
 
     public function toggleHighlight(Product $product)
     {
-        if (!$product->highlight) {
-            // Turn off highlight on all others first (only one highlighted at a time)
-            Product::where('id', '!=', $product->id)->update(['highlight' => false]);
-            $product->update(['highlight' => true]);
-        } else {
-            $product->update(['highlight' => false]);
-        }
+        $product->update(['highlight' => !$product->highlight]);
         return back()->with('success', 'Product highlight updated.');
     }
 

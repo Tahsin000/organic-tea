@@ -1,16 +1,16 @@
 <template>
-    <div ref="sliderRef" class="relative overflow-hidden rounded-2xl" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd" @mousedown="onDragStart">
+    <div v-if="!isEmpty" ref="sliderRef" class="relative overflow-hidden rounded-2xl" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd" @mousedown="onDragStart">
         <!-- Track -->
         <div class="flex items-stretch transition-transform duration-500 ease-out select-none"
              :style="{ transform: `translateX(-${translateX}%)`, cursor: isDragging ? 'grabbing' : 'grab' }">
-            <div v-for="(item, i) in trackItems" :key="`${item.id}-${i}`"
+            <div v-for="(item, i) in normalizedProducts" :key="item.id"
                  :style="{ width: `${slideWidth}%`, flexShrink: 0 }"
                  class="px-1.5 sm:px-2 self-stretch"
                  @mouseenter="pauseAutoplay" @mouseleave="resumeAutoplay">
                 <div class="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 border border-gray-100 flex flex-col h-full">
                     <!-- Image -->
                     <div class="relative h-44 sm:h-48 bg-gradient-to-br from-green-100 to-emerald-100 overflow-hidden cursor-pointer flex-shrink-0"
-                         @click="goToProduct(item.id)">
+                         @click="goToProduct(item.slug)">
                         <img :src="item.image" :alt="item.name"
                              class="w-full h-full object-cover hover:scale-110 transition-transform duration-700"
                              loading="lazy" />
@@ -31,7 +31,7 @@
                     </div>
                     <!-- Content -->
                     <div class="p-3 sm:p-4 md:p-5 flex flex-col flex-1">
-                        <h4 class="text-sm sm:text-base font-bold text-gray-900 mb-1 cursor-pointer hover:text-green-600 transition-colors leading-snug" @click="goToProduct(item.id)">{{ item.name }}</h4>
+                        <h4 class="text-sm sm:text-base font-bold text-gray-900 mb-1 cursor-pointer hover:text-green-600 transition-colors leading-snug" @click="goToProduct(item.slug)">{{ item.name }}</h4>
                         <p class="text-gray-500 text-xs mb-3 truncate">{{ item.desc }}</p>
                         <!-- Price -->
                         <div class="flex items-baseline gap-1.5 mb-3">
@@ -75,17 +75,17 @@
         <div class="flex justify-center gap-2 mt-6">
             <button v-for="i in totalDots" :key="i"
                     @click="goToSlide(i - 1)"
-                    :class="`rounded-full transition-all duration-300 ${i - 1 === activeDot ? 'bg-green-600 w-8 h-3' : 'bg-gray-300 w-3 h-3'}`" />
+                    :class="`rounded-full transition-all duration-300 ${i - 1 === currentSlide ? 'bg-green-600 w-8 h-3' : 'bg-gray-300 w-3 h-3'}`" />
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { TagIcon, ShoppingBagIcon, ChevronLeftIcon, ChevronRightIcon, FireIcon } from '@heroicons/vue/24/outline';
 
 const props = defineProps({
-    products: { type: Array, required: true },
+    products: { type: [Array, Object], required: true },
     slidesPerView: { type: Number, default: 3 },
     autoplayInterval: { type: Number, default: 4000 },
 });
@@ -96,7 +96,16 @@ const dragStartX = ref(0);
 const dragOffset = ref(0);
 const quantities = ref({});
 const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1024);
+const sliderRef = ref(null);
 let autoplayTimer = null;
+
+const normalizedProducts = computed(() => (
+    Array.isArray(props.products)
+        ? props.products
+        : Object.values(props.products || {})
+));
+
+const isEmpty = computed(() => normalizedProducts.value.length === 0);
 
 function updateWidth() { windowWidth.value = window.innerWidth; }
 
@@ -107,71 +116,61 @@ const responsiveSlides = computed(() => {
     return Math.min(props.slidesPerView, 3);
 });
 
-// Infinite loop: clone first/last items
-const trackItems = computed(() => {
-    const p = props.products;
-    const n = responsiveSlides.value;
-    if (p.length <= n) return p;
-    return [...p.slice(-n), ...p, ...p.slice(0, n)];
-});
-
 const slidesPerView = computed(() => responsiveSlides.value);
 const slideWidth = computed(() => 100 / slidesPerView.value);
-
-const realEnd = computed(() => props.products.length + responsiveSlides.value - 1);
+const totalSlides = computed(() => normalizedProducts.value.length);
+const maxSlide = computed(() => Math.max(0, normalizedProducts.value.length - slidesPerView.value));
+const totalDots = computed(() => Math.max(1, normalizedProducts.value.length - slidesPerView.value + 1));
 
 const translateX = computed(() => {
-    const total = trackItems.value.length;
-    return (currentSlide.value / total) * 100;
+    if (totalSlides.value <= slidesPerView.value) return 0;
+    return (currentSlide.value / totalSlides.value) * 100;
 });
 
-const activeDot = computed(() => {
-    let idx = currentSlide.value - responsiveSlides.value;
-    if (idx < 0) idx += props.products.length;
-    return idx % props.products.length;
-});
+const canGoNext = computed(() => totalSlides.value > slidesPerView.value && currentSlide.value < maxSlide.value);
+const canGoPrev = computed(() => totalSlides.value > slidesPerView.value && currentSlide.value > 0);
 
-const totalDots = computed(() => props.products.length);
-const canGoNext = computed(() => props.products.length > responsiveSlides.value);
-const canGoPrev = computed(() => props.products.length > responsiveSlides.value);
+function clampSlide(val) {
+    return Math.max(0, Math.min(val, maxSlide.value));
+}
 
 function next() {
-    currentSlide.value++;
-    if (currentSlide.value >= realEnd.value) {
-        setTimeout(() => {
-            currentSlide.value = responsiveSlides.value;
-        }, 500);
+    currentSlide.value = clampSlide(currentSlide.value + 1);
+    if (currentSlide.value >= maxSlide.value) {
+        stopAutoplay();
     }
 }
 
 function prev() {
-    currentSlide.value--;
-    if (currentSlide.value < 0) {
-        setTimeout(() => {
-            currentSlide.value = realEnd.value - 1;
-        }, 500);
-    }
+    currentSlide.value = clampSlide(currentSlide.value - 1);
 }
 
 function goToSlide(dotIndex) {
-    currentSlide.value = dotIndex + responsiveSlides.value;
+    currentSlide.value = clampSlide(dotIndex);
 }
 
-// Navigate to checkout page with product pre-filled
 function buyNow(productId) {
     window.location.href = `/checkout?product_id=${productId}&quantity=${quantities.value[productId] || 1}`;
 }
 
-function goToProduct(id) {
-    window.location.href = `/product/${id}`;
+function goToProduct(slug) {
+    if (!slug) return;
+    window.location.href = `/product/${slug}`;
 }
 
 // Autoplay
 function startAutoplay() {
     stopAutoplay();
-    autoplayTimer = setInterval(next, props.autoplayInterval);
+    if (totalSlides.value <= slidesPerView.value) return;
+    autoplayTimer = setInterval(() => {
+        if (currentSlide.value < maxSlide.value) {
+            currentSlide.value++;
+        } else {
+            stopAutoplay();
+        }
+    }, props.autoplayInterval);
 }
-function stopAutoplay() { if (autoplayTimer) clearInterval(autoplayTimer); }
+function stopAutoplay() { if (autoplayTimer) { clearInterval(autoplayTimer); autoplayTimer = null; } }
 function pauseAutoplay() { stopAutoplay(); }
 function resumeAutoplay() { startAutoplay(); }
 
@@ -208,23 +207,36 @@ function handleSwipeEnd(offset) {
 
 // Utilities
 function discountPercent(item) {
+    if (!item.original_price || item.original_price === 0) return 0;
     return Math.round((1 - item.price / item.original_price) * 100);
 }
 function formatBangla(n) {
     const b = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
     return String(n).replace(/\d/g, d => b[d]);
 }
-function truncate(text, len = 70) {
-    return text.length > len ? text.substring(0, len) + '...' : text;
+
+// Lifecycle
+function initSlider() {
+    currentSlide.value = 0;
+    quantities.value = {};
+    dragOffset.value = 0;
+    isDragging.value = false;
+    windowWidth.value = window.innerWidth;
+    startAutoplay();
 }
 
 onMounted(() => {
-    currentSlide.value = responsiveSlides.value;
-    startAutoplay();
+    initSlider();
     window.addEventListener('resize', updateWidth);
 });
+
 onUnmounted(() => {
     stopAutoplay();
     window.removeEventListener('resize', updateWidth);
 });
+
+// Reinitialize when products change (handles Inertia SPA navigation)
+watch(normalizedProducts, () => {
+    initSlider();
+}, { deep: true });
 </script>
