@@ -188,12 +188,26 @@
                             </p>
                         </div>
 
+                        <div v-if="captchaEnabled" class="bg-gray-50 border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-6">
+                            <p class="text-sm font-semibold text-gray-700 mb-2">Human Verification</p>
+                            <div ref="captchaContainer" class="min-h-[78px]"></div>
+                            <p v-if="captchaError" class="mt-2 text-sm text-red-600">{{ captchaError }}</p>
+                            <button v-if="captchaError"
+                                    type="button"
+                                    @click="renderCaptcha"
+                                    :disabled="isCaptchaRendering"
+                                    class="mt-2 text-xs font-semibold text-green-700 hover:text-green-800 disabled:text-gray-400">
+                                Retry captcha
+                            </button>
+                        </div>
+
                         <div class="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3">
                             <button type="button" @click="currentStep = 2"
                                     class="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-4 rounded-xl border-2 border-gray-200 text-gray-600 hover:border-green-600 hover:text-green-600 font-bold text-sm sm:text-base transition-colors">
                                 পূর্ববর্তী
                             </button>
                             <button @click="submitOrder"
+                                    :disabled="isSubmitting || (captchaEnabled && !captchaToken)"
                                     class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 sm:py-4 rounded-xl font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5">
                                 <CheckCircleIcon class="w-4 h-4 sm:w-5 sm:h-5" />
                                 অর্ডার নিশ্চিত করুন
@@ -307,7 +321,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, watch, nextTick, onMounted } from 'vue';
 import { Head, router } from '@inertiajs/vue3';
 import StickyRibbon from '../Components/Landing/StickyRibbon.vue';
 import {
@@ -321,6 +335,7 @@ const props = defineProps({
     cartItems: { type: Array, default: () => [] },
     deliveryCharges: { type: Array, default: () => [] },
     paymentMethods: { type: Array, default: () => [] },
+    captcha: { type: Object, default: () => ({ enabled: false, site_key: '' }) },
 });
 
 const currentStep = ref(props.cartItems.length > 0 ? 2 : 1);
@@ -399,6 +414,135 @@ const deliveryCharge = computed(() => selectedArea.value ? selectedArea.value.ch
 const selectedMethod = computed(() => paymentMethodsList.value.find(m => m.id === form.payment_method) ?? null);
 const total = computed(() => subtotal.value + (form.city ? deliveryCharge.value : 0));
 
+const captchaContainer = ref(null);
+const captchaWidgetId = ref(null);
+const captchaToken = ref('');
+const captchaError = ref('');
+const isSubmitting = ref(false);
+const isCaptchaRendering = ref(false);
+const captchaEnabled = computed(() => Boolean(props.captcha?.enabled && props.captcha?.site_key));
+let recaptchaLoadPromise = null;
+
+function onCaptchaSuccess(token) {
+    captchaToken.value = token || '';
+    captchaError.value = '';
+}
+
+function onCaptchaExpired() {
+    captchaToken.value = '';
+}
+
+function onCaptchaError() {
+    captchaToken.value = '';
+    captchaError.value = 'Captcha could not be verified. Please try again.';
+}
+
+function loadRecaptchaScript() {
+    if (window.grecaptcha?.render) {
+        return Promise.resolve(window.grecaptcha);
+    }
+
+    if (recaptchaLoadPromise) {
+        return recaptchaLoadPromise;
+    }
+
+    const waitForApi = () => new Promise((resolve, reject) => {
+        let attempts = 0;
+        const maxAttempts = 80; // ~8 seconds
+        const interval = setInterval(() => {
+            if (window.grecaptcha?.render) {
+                clearInterval(interval);
+                resolve(window.grecaptcha);
+                return;
+            }
+
+            attempts++;
+            if (attempts >= maxAttempts) {
+                clearInterval(interval);
+                reject(new Error('reCAPTCHA API did not become ready in time.'));
+            }
+        }, 100);
+    });
+
+    recaptchaLoadPromise = new Promise((resolve, reject) => {
+        const existing = document.querySelector('script[data-recaptcha="checkout"]');
+        if (existing) {
+            waitForApi().then(resolve).catch(reject);
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
+        script.async = true;
+        script.defer = true;
+        script.dataset.recaptcha = 'checkout';
+        script.onload = () => {
+            waitForApi().then(resolve).catch(reject);
+        };
+        script.onerror = () => reject(new Error('Failed to load captcha script.'));
+        document.head.appendChild(script);
+    }).finally(() => {
+        // Allow retry if first load failed
+        if (!window.grecaptcha?.render) {
+            recaptchaLoadPromise = null;
+        }
+    });
+
+    return recaptchaLoadPromise;
+}
+
+async function renderCaptcha() {
+    if (!captchaEnabled.value || isCaptchaRendering.value || captchaWidgetId.value !== null) return;
+
+    isCaptchaRendering.value = true;
+    await nextTick();
+    if (!captchaContainer.value) {
+        isCaptchaRendering.value = false;
+        return;
+    }
+
+    try {
+        await loadRecaptchaScript();
+        if (!window.grecaptcha) return;
+
+        captchaContainer.value.innerHTML = '';
+        captchaWidgetId.value = window.grecaptcha.render(captchaContainer.value, {
+            sitekey: String(props.captcha.site_key || '').trim(),
+            callback: onCaptchaSuccess,
+            'expired-callback': onCaptchaExpired,
+            'error-callback': onCaptchaError,
+        });
+    } catch (error) {
+        captchaWidgetId.value = null;
+        captchaError.value = 'Captcha is unavailable right now. Please try again in a moment.';
+    } finally {
+        isCaptchaRendering.value = false;
+    }
+}
+
+function resetCaptcha() {
+    captchaToken.value = '';
+    if (window.grecaptcha && captchaWidgetId.value !== null) {
+        window.grecaptcha.reset(captchaWidgetId.value);
+    }
+}
+
+watch(currentStep, async (step) => {
+    if (step === 3) {
+        await renderCaptcha();
+    } else if (captchaEnabled.value) {
+        captchaToken.value = '';
+        captchaError.value = '';
+        captchaWidgetId.value = null;
+    }
+});
+
+onMounted(async () => {
+    if (currentStep.value === 3) {
+        await renderCaptcha();
+    }
+});
+
 function submitOrder() {
     // Validate transaction fields if required
     if (selectedMethod.value?.requires_transaction) {
@@ -412,6 +556,14 @@ function submitOrder() {
         }
     }
 
+    if (captchaEnabled.value && !captchaToken.value) {
+        captchaError.value = 'Please complete the captcha before placing the order.';
+        return;
+    }
+
+    isSubmitting.value = true;
+    captchaError.value = '';
+
     router.post('/checkout', {
         name: form.name,
         phone: form.phone,
@@ -421,12 +573,25 @@ function submitOrder() {
         payment_method: form.payment_method,
         payment_number: form.payment_number || null,
         transaction_id: form.transaction_id || null,
+        captcha_token: captchaToken.value || null,
         items: selectedProducts.value.map(item => ({
             product_id: item.id,
             quantity: item.quantity,
             unit_price: item.price,
         })),
         notes: form.notes || null,
+    }, {
+        onError: (errors) => {
+            if (errors?.captcha_token) {
+                captchaError.value = errors.captcha_token;
+            }
+            if (captchaEnabled.value) {
+                resetCaptcha();
+            }
+        },
+        onFinish: () => {
+            isSubmitting.value = false;
+        },
     });
 }
 </script>

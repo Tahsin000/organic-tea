@@ -10,6 +10,7 @@ use App\Models\PaymentMethod;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 
 class OrderController extends Controller
@@ -39,11 +40,13 @@ class OrderController extends Controller
             'cartItems'       => $cartItems,
             'deliveryCharges' => $deliveryCharges,
             'paymentMethods'  => $paymentMethods,
+            'captcha'         => $this->getCaptchaConfig(),
         ]);
     }
 
     public function store(Request $request)
     {
+        $captchaEnabled = $this->isCaptchaEnabled();
         $deliveryCharges = DeliveryCharge::active()->get()->keyBy('area_key');
         $activeKeys      = $deliveryCharges->keys()->toArray();
 
@@ -61,9 +64,16 @@ class OrderController extends Controller
             'items'            => 'required|array|min:1',
             'items.*.product_id' => 'required',
             'items.*.quantity'   => 'required|integer|min:1',
+            'captcha_token'    => $captchaEnabled ? 'required|string' : 'nullable|string',
             'coupon_code'      => 'nullable|string|max:50',
             'notes'            => 'nullable|string|max:500',
         ]);
+
+        if ($captchaEnabled && !$this->verifyCaptchaToken((string) $validated['captcha_token'], $request->ip())) {
+            return back()->withErrors([
+                'captcha_token' => 'Captcha verification failed. Please try again.',
+            ])->withInput();
+        }
 
         // Validate transaction info if the selected method requires it
         $selectedMethod = PaymentMethod::where('key', $validated['payment_method'])->first();
@@ -188,5 +198,50 @@ class OrderController extends Controller
     private function getPaymentMethods(): array
     {
         return PaymentMethod::active()->get()->map(fn ($m) => $m->toFrontendArray())->values()->toArray();
+    }
+
+    private function getCaptchaConfig(): array
+    {
+        return [
+            'enabled'  => $this->isCaptchaEnabled(),
+            'site_key' => config('services.recaptcha.site_key'),
+        ];
+    }
+
+    private function isCaptchaEnabled(): bool
+    {
+        return filled(config('services.recaptcha.site_key'))
+            && filled(config('services.recaptcha.secret_key'));
+    }
+
+    private function verifyCaptchaToken(string $token, ?string $ip = null): bool
+    {
+        $secret = config('services.recaptcha.secret_key');
+        if (!filled($secret) || !filled($token)) {
+            return false;
+        }
+
+        try {
+            $payload = [
+                'secret'   => $secret,
+                'response' => $token,
+            ];
+
+            if ($ip) {
+                $payload['remoteip'] = $ip;
+            }
+
+            $response = Http::asForm()
+                ->timeout(10)
+                ->post('https://www.google.com/recaptcha/api/siteverify', $payload);
+
+            if (!$response->ok()) {
+                return false;
+            }
+
+            return (bool) ($response->json('success') ?? false);
+        } catch (\Throwable) {
+            return false;
+        }
     }
 }
