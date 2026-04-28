@@ -1,19 +1,20 @@
-<!-- Footer Start -->
+﻿<!-- Footer Start -->
 <footer class="footer">
     <div class="container-fluid">
-        <div class="row">
+        @php $appName = config('app.name'); @endphp
+        <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start">
                 <script>
                     document.write(new Date().getFullYear())
                 </script>
-                © Hash - By <span
-                    class="fw-bold text-decoration-underline text-uppercase text-reset fs-12">Hassh</span>
+                &copy; <span class="fw-semibold">{{ $appName }}</span>
             </div>
-            <div class="col-md-6">
-                <div class="d-none d-md-flex justify-content-end gap-3">
-                    <a href="javascript: void(0);" class="link-reset">About</a>
-                    <a href="javascript: void(0);" class="link-reset">Support</a>
-                    <a href="javascript: void(0);" class="link-reset">Contact Us</a>
+            <div class="col-md-6 mt-2 mt-md-0">
+                <div class="d-flex justify-content-center justify-content-md-end gap-3">
+                    <span class="text-muted">Company: {{ $appName }}</span>
+                    <a href="https://www.linkedin.com/in/tahsin-abrar/" target="_blank" rel="noopener noreferrer" class="link-reset">
+                        LinkedIn Support
+                    </a>
                 </div>
             </div>
         </div>
