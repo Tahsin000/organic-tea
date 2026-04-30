@@ -65,7 +65,7 @@ function iconMap(name) {
 const c = computed(() => ({
     badge: 'আমাদের বিশেষত্ব',
     title_1: 'কেন ',
-    title_highlight: 'অর্গানিক',
+    title_highlight: 'অ্যারোমা ব্লেন্ড',
     title_2: ' চা সেরা?',
     description: 'প্রতিটি কাপে প্রকৃতির বিশুদ্ধতা',
     features: [

@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Edit Order #' . $order->id . ' | Organic Tea Admin')
+@section('title', 'Edit Order #' . $order->id . ' | Aroma Blend Admin')
 
 @section('content')
 <div class="container-fluid">

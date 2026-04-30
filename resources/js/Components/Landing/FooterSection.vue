@@ -41,7 +41,7 @@ const props = defineProps({
 });
 
 const c = computed(() => ({
-    brand_name: 'অর্গানিক',
+    brand_name: 'অ্যারোমা ব্লেন্ড (Aroma Blend)',
     brand_description: 'সিলেটের পাহাড়ি বাগান থেকে বিশুদ্ধ জৈব চা পাতা - প্রকৃতির আসল স্বাদ আপনার কাপে।',
     quick_links_title: 'দ্রুত লিংক',
     quick_links: [
@@ -52,7 +52,7 @@ const c = computed(() => ({
     ],
     contact_title: 'যোগাযোগ',
     contact_phone: '+৮৮০ ১XXX-XXXXXX',
-    contact_email: 'info@organic-tea.com',
+    contact_email: 'info@aromablend.com',
     contact_address: 'সিলেট, বাংলাদেশ',
     ...props.content,
 }));

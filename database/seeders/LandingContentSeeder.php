@@ -14,8 +14,8 @@ class LandingContentSeeder extends Seeder
                 'status' => true,
                 'badge' => '১০% প্রাকৃতিক ও জৈব',
                 'title_1' => 'সেরা মানের ',
-                'title_highlight' => 'অর্গানিক চা',
-                'title_2' => '<br class="hidden sm:block" /> আপনার দরজায়',
+                'title_highlight' => 'অ্যারোমা ব্লেন্ড',
+                'title_2' => ' চা <br class="hidden sm:block" /> আপনার দরজায়',
                 'description' => 'সিলেটের পাহাড়ি বাগান থেকে সংগ্রহ করা বিশুদ্ধ জৈব চা পাতা।',
                 'cta_primary' => 'পণ্য দেখুন',
                 'cta_secondary' => 'অফার দেখুন',
@@ -30,7 +30,7 @@ class LandingContentSeeder extends Seeder
                 'status' => true,
                 'badge' => 'আমাদের বিশেষত্ব',
                 'title_1' => 'কেন ',
-                'title_highlight' => 'অর্গানিক',
+                'title_highlight' => 'অ্যারোমা ব্লেন্ড',
                 'title_2' => ' চা সেরা?',
                 'description' => 'প্রতিটি কাপে প্রকৃতির বিশুদ্ধতা',
                 'popular_title' => 'আমাদের জনপ্রিয় পণ্যসমূহ',
@@ -47,7 +47,7 @@ class LandingContentSeeder extends Seeder
                 'badge' => 'সীমিত সময়ের অফার!',
                 'title_1' => 'প্রথম অর্ডারে ',
                 'title_highlight' => '২০% ছাড়',
-                'description' => 'অর্গানিক চা ট্রায়াল করুন বিশেষ মূল্যে।',
+                'description' => 'অ্যারোমা ব্লেন্ড ট্রায়াল করুন বিশেষ মূল্যে।',
                 'countdown_label' => 'অফার শেষ হতে বাকি',
                 'timer_enabled' => true,
                 'end_date' => date('Y-m-d', strtotime('+7 days')),
@@ -93,7 +93,7 @@ class LandingContentSeeder extends Seeder
 
             'footer' => [
                 'status' => true,
-                'brand_name' => 'অর্গানিক',
+                'brand_name' => 'অ্যারোমা ব্লেন্ড (Aroma Blend)',
                 'brand_description' => 'সিলেটের পাহাড়ি বাগান থেকে বিশুদ্ধ জৈব চা পাতা।',
                 'quick_links_title' => 'দ্রুত লিংক',
                 'quick_links' => [
@@ -104,14 +104,14 @@ class LandingContentSeeder extends Seeder
                 ],
                 'contact_title' => 'যোগাযোগ',
                 'contact_phone' => '+৮৮০ ১XXX-XXXXXX',
-                'contact_email' => 'info@organic-tea.com',
+                'contact_email' => 'info@aromablend.com',
                 'contact_address' => 'সিলেট, বাংলাদেশ',
             ],
 
             'mail' => [
                 'status' => true,
                 'emails' => [
-                    ['email' => 'admin@organic-tea.com', 'active' => true],
+                    ['email' => 'admin@aromablend.com', 'active' => true],
                 ],
             ],
 

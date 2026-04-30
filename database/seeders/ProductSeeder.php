@@ -46,7 +46,7 @@ class ProductSeeder extends Seeder
                 'tags' => [
                     ['label' => 'বেস্ট সেলার',             'color' => 'green',  'sort_order' => 1],
                     ['label' => 'প্রথম অর্ডারে ২০% ছাড়', 'color' => 'red',    'sort_order' => 2],
-                    ['label' => '১০০% অর্গানিক',          'color' => 'green',  'sort_order' => 3],
+                    ['label' => 'অ্যারোমা ব্লেন্ড স্পেশাল',          'color' => 'green',  'sort_order' => 3],
                 ],
             ],
             [
@@ -98,7 +98,7 @@ class ProductSeeder extends Seeder
             ],
             [
                 'product' => [
-                    'name'           => 'অর্গানিক কম্বো প্যাক',
+                    'name'           => 'অ্যারোমা ব্লেন্ড কম্বো প্যাক',
                     'slug'           => 'combo-pack',
                     'desc'           => 'তিন ধরনের চা একসাথে - গ্রিন, ব্ল্যাক ও হার্বাল টি। পরিবারের সবার জন্য পারফেক্ট গিফট প্যাক। বিশেষ মূল্যে সাশ্রয়।',
                     'price'          => 950,

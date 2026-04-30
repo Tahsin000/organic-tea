@@ -6,7 +6,17 @@
             <div class="absolute bottom-10 right-10 w-96 h-96 bg-emerald-300 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s"></div>
         </div>
 
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 lg:pt-28 lg:pb-24">
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 lg:pt-12 pb-4 flex justify-center lg:justify-start items-center z-30">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-700 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg border-2 border-green-100">A</div>
+                <div class="flex flex-col text-left">
+                    <span class="text-2xl font-bold text-gray-900 leading-none tracking-tight">অ্যারোমা ব্লেন্ড</span>
+                    <span class="text-xs text-green-600 font-semibold uppercase tracking-widest mt-1">Aroma Blend</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 lg:pt-16 lg:pb-24">
             <!-- Mobile: tag centered, desktop: left-aligned -->
             <div class="text-center lg:text-right">
                 <span class="inline-flex items-center gap-2 bg-green-100 text-green-800 text-sm font-medium px-4 py-2 rounded-full mb-4 animate-fade-in-up">
@@ -111,8 +121,8 @@ const props = defineProps({
 const c = computed(() => ({
     badge: '১০০% প্রাকৃতিক ও জৈব',
     title_1: 'সেরা মানের ',
-    title_highlight: 'অর্গানিক চা',
-    title_2: '<br class="hidden sm:block" /> আপনার দরজায়',
+    title_highlight: 'অ্যারোমা ব্লেন্ড',
+    title_2: ' চা <br class="hidden sm:block" /> আপনার দরজায়',
     description: 'সিলেটের পাহাড়ি বাগান থেকে সংগ্রহ করা বিশুদ্ধ জৈব চা পাতা। কোনো রাসায়নিক সার নেই, কোনো কৃত্রিম স্বাদ নেই - শুধু প্রকৃতির আসল স্বাদ।',
     cta_primary: 'পণ্য দেখুন',
     cta_secondary: 'অফার দেখুন',

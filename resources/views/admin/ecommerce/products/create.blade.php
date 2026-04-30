@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Add Product | Organic Tea Admin')
+@section('title', 'Add Product | Aroma Blend Admin')
 
 @section('content')
 <div class="container-fluid">

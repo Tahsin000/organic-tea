@@ -66,7 +66,7 @@
                     </form>
 
                     <p class="text-muted text-center mt-4 mb-0">
-                        ©<script>document.write(new Date().getFullYear())</script> Organic Tea - Admin Panel
+                        ©<script>document.write(new Date().getFullYear())</script> Aroma Blend - Admin Panel
                     </p>
                 </div>
             </div>

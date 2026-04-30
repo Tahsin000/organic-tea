@@ -120,7 +120,7 @@
         </div>
 
         <div class="footer">
-            <p>Organic Tea - Automated Order Notification</p>
+            <p>Aroma Blend - Automated Order Notification</p>
         </div>
     </div>
 </body>

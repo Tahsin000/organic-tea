@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>@yield('title', 'Admin')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="author" content="Organic Tea" />
+    <meta name="author" content="Aroma Blend" />
 
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}" />

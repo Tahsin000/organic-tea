@@ -174,9 +174,9 @@ const c = computed(() => ({
 }));
 
 const fallbackReviews = [
-    { name: 'রহিম আহমেদ', location: 'ঢাকা', initial: 'রহ', image: null, text: 'অর্গানিক চা সত্যিই অসাধারণ! স্বাদ আর গন্ধ দুটোই প্রিমিয়াম।', stars: 5 },
+    { name: 'রহিম আহমেদ', location: 'ঢাকা', initial: 'রহ', image: null, text: 'অ্যারোমা ব্লেন্ড চা সত্যিই অসাধারণ! স্বাদ আর গন্ধ দুটোই প্রিমিয়াম।', stars: 5 },
     { name: 'ফারহানা খান', location: 'চট্টগ্রাম', initial: 'ফা', image: null, text: 'গ্রিন টি অর্ডার করেছিলাম, প্যাকেজিং ছিল দারুণ। চা পাতা একদম তাজা।', stars: 5 },
-    { name: 'কামাল হোসেন', location: 'সিলেট', initial: 'কা', image: null, text: 'দীর্ঘদিন ধরে ভালো চা খুঁজছিলাম। অর্গানিক চা সেই খোঁজ শেষ করেছে।', stars: 5 },
+    { name: 'কামাল হোসেন', location: 'সিলেট', initial: 'কা', image: null, text: 'দীর্ঘদিন ধরে ভালো চা খুঁজছিলাম। অ্যারোমা ব্লেন্ড সেই খোঁজ শেষ করেছে।', stars: 5 },
     { name: 'নাসরিন আক্তার', location: 'রাজশাহী', initial: 'না', image: null, text: 'হার্বাল টি আমার ঘুমের সমস্যা অনেকটাই কমিয়ে দিয়েছে।', stars: 4 },
     { name: 'জাহিদ হাসান', location: 'খুলনা', initial: 'জা', image: null, text: 'কম্বো প্যাক কিনেছিলাম - তিন ধরনের চা একসাথে। মানসম্মত।', stars: 5 },
     { name: 'সালমা বেগম', location: 'চট্টগ্রাম', initial: 'সা', image: null, text: 'ব্ল্যাক টি এর সুগন্ধ অসাধারণ। ডেলিভারিও খুব দ্রুত।', stars: 5 },
@@ -184,7 +184,7 @@ const fallbackReviews = [
     { name: 'মাহমুদা ইসলাম', location: 'বরিশাল', initial: 'মা', image: null, text: 'গ্রিন টি দিয়ে ডায়েট শুরু করেছি। স্বাদ হালকা কিন্তু তৃপ্তিদায়ক।', stars: 5 },
     { name: 'আরিফুল ইসলাম', location: 'সিলেট', initial: 'আ', image: null, text: 'চা প্রেমি হিসেবে বলছি - এত ভালো চা আগে পাইনি।', stars: 5 },
     { name: 'রুমানা পারভীন', location: 'ঢাকা', initial: 'রু', image: null, text: 'ফুলের চা আমার পছন্দ সবচেয়ে বেশি। সুগন্ধ মন মুগ্ধ করে।', stars: 5 },
-    { name: 'সোহেল রানা', location: 'কক্সবাজার', initial: 'সো', image: null, text: 'সারাদিনে ৩ কাপ চা খাই। অর্গানিক চা স্বাস্থ্যের জন্য ভালো।', stars: 4 },
+    { name: 'সোহেল রানা', location: 'কক্সবাজার', initial: 'সো', image: null, text: 'সারাদিনে ৩ কাপ চা খাই। অ্যারোমা ব্লেন্ড স্বাস্থ্যের জন্য ভালো।', stars: 4 },
     { name: 'তাসনিম জাহান', location: 'রংপুর', initial: 'তা', image: null, text: 'ছেলেমেয়েরাও এখন এই চা খায়। কোনো কৃত্রিম স্বাদ নেই।', stars: 5 },
 ];
 
