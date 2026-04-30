@@ -1,5 +1,5 @@
 <template>
-    <Head :title="product.name + ' - অর্গানিক চা'" />
+    <Head :title="product.name + ' - অ্যারোমা ব্লেন্ড চা'" />
     <div class="min-h-screen bg-white">
         <StickyRibbon :content="site?.ribbon" />
 

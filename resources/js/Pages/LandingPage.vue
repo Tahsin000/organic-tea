@@ -1,5 +1,5 @@
 <template>
-    <Head title="অর্গানিক - প্রাকৃতিক চা" />
+    <Head title="অ্যারোমা ব্লেন্ড - প্রাকৃতিক চা" />
     <div class="min-h-screen" :key="$page.url">
         <StickyRibbon :content="site.ribbon" />
         <HeroSection :highlighted-products="highlightedProducts" :content="site.hero || {}" />

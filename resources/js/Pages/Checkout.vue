@@ -1,5 +1,5 @@
 <template>
-    <Head title="চেকআউট - অর্গানিক চা" />
+    <Head title="চেকআউট - অ্যারোমা ব্লেন্ড চা" />
     <div class="min-h-screen bg-gray-50">
         <StickyRibbon />
 

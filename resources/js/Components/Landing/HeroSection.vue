@@ -8,7 +8,9 @@
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 lg:pt-12 pb-4 flex justify-center lg:justify-start items-center z-30">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-700 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg border-2 border-green-100">A</div>
+                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-700 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg border-2 border-green-100">
+                    <img src="../../../../public/images/favicon.png" alt="Logo" class="w-full h-full object-cover" />
+                </div>
                 <div class="flex flex-col text-left">
                     <span class="text-2xl font-bold text-gray-900 leading-none tracking-tight">অ্যারোমা ব্লেন্ড</span>
                     <span class="text-xs text-green-600 font-semibold uppercase tracking-widest mt-1">Aroma Blend</span>

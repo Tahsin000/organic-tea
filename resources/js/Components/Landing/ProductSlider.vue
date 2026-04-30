@@ -63,11 +63,11 @@
 
         <!-- Navigation Arrows -->
         <button v-if="canGoPrev" @click="prev"
-                class="absolute left-1 top-1/2 -translate-y-1/2 -translate-x-2 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors z-10 group">
+                class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm shadow-lg rounded-full p-2 hover:bg-white transition-colors z-10 group">
             <ChevronLeftIcon class="w-5 h-5 text-gray-700 group-hover:text-green-600 transition-colors" />
         </button>
         <button v-if="canGoNext" @click="next"
-                class="absolute right-1 top-1/2 -translate-y-1/2 translate-x-2 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors z-10 group">
+                class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm shadow-lg rounded-full p-2 hover:bg-white transition-colors z-10 group">
             <ChevronRightIcon class="w-5 h-5 text-gray-700 group-hover:text-green-600 transition-colors" />
         </button>
 
@@ -124,7 +124,7 @@ const totalDots = computed(() => Math.max(1, normalizedProducts.value.length - s
 
 const translateX = computed(() => {
     if (totalSlides.value <= slidesPerView.value) return 0;
-    return (currentSlide.value / totalSlides.value) * 100;
+    return currentSlide.value * slideWidth.value;
 });
 
 const canGoNext = computed(() => totalSlides.value > slidesPerView.value && currentSlide.value < maxSlide.value);
